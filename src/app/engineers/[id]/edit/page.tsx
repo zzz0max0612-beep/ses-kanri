@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase-browser'
+
+const supabase = createClient()
 import { parseSummary } from '@/lib/parseSummary'
 import { cleanFileMetadata } from '@/lib/cleanFileMetadata'
 import { SkillSheet } from '@/types'

@@ -4,7 +4,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Engineer, SkillSheet } from '@/types'
 import { generateSummary } from '@/lib/parseSummary'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase-browser'
+
+const supabase = createClient()
 
 const BUCKET = 'skill-sheets'
 

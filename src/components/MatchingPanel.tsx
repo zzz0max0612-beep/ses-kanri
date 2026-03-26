@@ -2,7 +2,9 @@
 
 import { useState } from 'react'
 import { Project, Engineer } from '@/types'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase-browser'
+
+const supabase = createClient()
 
 type MatchResult = {
   engineer_id: string

@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase-browser'
+
+const supabase = createClient()
 import { Engineer, Project, Proposal, ProposalStatus } from '@/types'
 
 const STATUSES: ProposalStatus[] = ['提案中', '面談調整中', '面談済', '成約', '見送り']

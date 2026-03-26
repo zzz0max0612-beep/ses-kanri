@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase-browser'
+
+const supabase = createClient()
 import { Engineer, SkillSheet } from '@/types'
 
 const ACTIVE_STATUSES = ['提案中', '面談調整中', '面談済']
