@@ -3,10 +3,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase-browser'
-
-const supabase = createClient()
 import { parseSummary } from '@/lib/parseSummary'
 import { cleanFileMetadata } from '@/lib/cleanFileMetadata'
+
+const supabase = createClient()
 
 const BUCKET = 'skill-sheets'
 

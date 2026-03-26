@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase-browser'
+import { parseProject } from '@/lib/parseProject'
 
 const supabase = createClient()
-import { parseProject } from '@/lib/parseProject'
 
 export default function EditProjectPage() {
   const router = useRouter()

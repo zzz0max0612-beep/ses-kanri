@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase-browser'
+import { Project } from '@/types'
+import ProjectCard from '@/components/ProjectCard'
 
 const supabase = createClient()
-import { Project } from '@/types'
 
-const ACTIVE_STATUSES = ['提案中', '面談調整中', '面談済']
-import ProjectCard from '@/components/ProjectCard'
+const ACTIVE_STATUSES = ['提案中', '面談中', '合格', '稼働中']
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])

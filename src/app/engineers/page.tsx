@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase-browser'
+import { Engineer, SkillSheet } from '@/types'
+import EngineerCard from '@/components/EngineerCard'
 
 const supabase = createClient()
-import { Engineer, SkillSheet } from '@/types'
 
-const ACTIVE_STATUSES = ['提案中', '面談調整中', '面談済']
-import EngineerCard from '@/components/EngineerCard'
+const ACTIVE_STATUSES = ['提案中', '面談中', '合格', '稼働中']
 
 export default function EngineersPage() {
   const [engineers, setEngineers] = useState<Engineer[]>([])
