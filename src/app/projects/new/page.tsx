@@ -72,7 +72,10 @@ export default function NewProjectPage() {
     const splitToArray = (val: string) =>
       val.split(/[,、，\n]/).map((s) => s.trim()).filter(Boolean)
 
+    const { data: { user } } = await supabase.auth.getUser()
+
     const { error } = await supabase.from('projects').insert({
+      created_by: user?.id ?? null,
       project_name: form.project_name,
       client_name: form.client_name || null,
       provider_company: form.provider_company || null,

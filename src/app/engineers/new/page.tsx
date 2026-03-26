@@ -70,9 +70,12 @@ export default function NewEngineerPage() {
     setLoading(true)
 
     // 1. 要員を登録
+    const { data: { user } } = await supabase.auth.getUser()
+
     const { data: engineer, error: insertError } = await supabase
       .from('engineers')
       .insert({
+        created_by: user?.id ?? null,
         name: form.name,
         affiliation: form.affiliation || null,
         source_company: form.source_company || null,

@@ -26,7 +26,24 @@ export default function EngineersPage() {
       return
     }
 
-    setEngineers(engineerData ?? [])
+    // 表示名を取得してマージ
+    const createdByIds = (engineerData ?? []).map((e) => e.created_by).filter(Boolean)
+    let displayNameMap: Record<string, string> = {}
+    if (createdByIds.length > 0) {
+      const { data: usersData } = await supabase
+        .from('users')
+        .select('id, display_name')
+        .in('id', createdByIds)
+      for (const u of usersData ?? []) {
+        displayNameMap[u.id] = u.display_name
+      }
+    }
+
+    const engineersWithName = (engineerData ?? []).map((e) => ({
+      ...e,
+      created_by_name: e.created_by ? (displayNameMap[e.created_by] ?? null) : null,
+    }))
+    setEngineers(engineersWithName)
 
     // スキルシートをまとめて取得
     if (engineerData && engineerData.length > 0) {

@@ -25,7 +25,24 @@ export default function ProjectsPage() {
       return
     }
     const projectData = data ?? []
-    setProjects(projectData)
+
+    // 表示名を取得してマージ
+    const createdByIds = projectData.map((p) => p.created_by).filter(Boolean)
+    let displayNameMap: Record<string, string> = {}
+    if (createdByIds.length > 0) {
+      const { data: usersData } = await supabase
+        .from('users')
+        .select('id, display_name')
+        .in('id', createdByIds)
+      for (const u of usersData ?? []) {
+        displayNameMap[u.id] = u.display_name
+      }
+    }
+    const projectsWithName = projectData.map((p) => ({
+      ...p,
+      created_by_name: p.created_by ? (displayNameMap[p.created_by] ?? null) : null,
+    }))
+    setProjects(projectsWithName)
 
     if (projectData.length > 0) {
       const ids = projectData.map((p) => p.id)

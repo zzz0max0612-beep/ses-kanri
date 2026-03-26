@@ -66,6 +66,9 @@ export default function ProjectCard({ project, onDelete, activeProposalCount = 0
           </div>
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
+          {project.created_by_name && (
+            <span className="text-xs text-gray-400">{project.created_by_name}</span>
+          )}
           {project.status && (
             <span className={`text-xs px-2 py-0.5 rounded ${colorClass}`}>
               {project.status}

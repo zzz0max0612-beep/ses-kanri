@@ -75,6 +75,9 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
           )}
         </div>
         <div className="flex flex-col items-end gap-1">
+          {engineer.created_by_name && (
+            <span className="text-xs text-gray-400">{engineer.created_by_name}</span>
+          )}
           <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
             {workStyleLabel[engineer.work_style] ?? engineer.work_style}
           </span>

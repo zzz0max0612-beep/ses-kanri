@@ -20,6 +20,8 @@ export type Engineer = {
   notes: string | null
   created_at: string
   updated_at: string
+  created_by: string | null
+  created_by_name?: string | null
 }
 
 export type Project = {
@@ -47,6 +49,8 @@ export type Project = {
   description: string | null
   created_at: string
   updated_at: string
+  created_by: string | null
+  created_by_name?: string | null
 }
 
 export type SkillSheet = {
