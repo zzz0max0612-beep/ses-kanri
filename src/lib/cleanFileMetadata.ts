@@ -11,7 +11,7 @@ export async function cleanPdfMetadata(file: File): Promise<File> {
   pdfDoc.setProducer('')
   pdfDoc.setCreator('')
   const cleaned = await pdfDoc.save()
-  return new File([cleaned], file.name, { type: 'application/pdf' })
+  return new File([cleaned.buffer as ArrayBuffer], file.name, { type: 'application/pdf' })
 }
 
 export async function cleanExcelMetadata(file: File): Promise<File> {
