@@ -28,32 +28,34 @@ export default function Header() {
         <Link href="/" className="font-bold text-lg text-blue-700 tracking-tight">
           SES営業管理
         </Link>
-        <nav className="flex items-center gap-1">
-          {navItems.map((item) => {
-            const isActive = item.href === '/'
-              ? pathname === '/'
-              : pathname.startsWith(item.href)
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-blue-50 text-blue-700'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                {item.label}
-              </Link>
-            )
-          })}
-          <button
-            onClick={handleLogout}
-            className="ml-2 px-3 py-1.5 rounded text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
-          >
-            ログアウト
-          </button>
-        </nav>
+        {pathname !== '/login' && (
+          <nav className="flex items-center gap-1">
+            {navItems.map((item) => {
+              const isActive = item.href === '/'
+                ? pathname === '/'
+                : pathname.startsWith(item.href)
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-blue-50 text-blue-700'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
+            <button
+              onClick={handleLogout}
+              className="ml-2 px-3 py-1.5 rounded text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+            >
+              ログアウト
+            </button>
+          </nav>
+        )}
       </div>
     </header>
   )
