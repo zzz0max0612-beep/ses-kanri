@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SES営業管理システム</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #4F46E5; --primary-dark: #3730A3; --primary-light: #EEF2FF;
+      --success: #059669; --success-light: #D1FAE5;
+      --warning: #D97706; --warning-light: #FEF3C7;
+      --danger: #DC2626; --danger-light: #FEE2E2;
+      --info: #0284C7; --info-light: #E0F2FE;
+      --purple: #7C3AED; --purple-light: #EDE9FE;
+      --gray-50: #F8FAFC; --gray-100: #F1F5F9; --gray-200: #E2E8F0;
+      --gray-300: #CBD5E1; --gray-400: #94A3B8; --gray-500: #64748B;
+      --gray-600: #475569; --gray-700: #334155; --gray-800: #1E293B;
+      --white: #FFFFFF;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+      --radius: 10px; --radius-sm: 6px;
+      --font: 'Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;
+    }
+    body { font-family: var(--font); background: var(--gray-100); color: var(--gray-800); min-height: 100vh; font-size: 14px; line-height: 1.6; }
+    .topnav { background: var(--primary); color: white; padding: 0 20px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-md); }
+    .topnav-logo { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .topnav-tabs { display: flex; gap: 2px; }
+    .topnav-tab { padding: 7px 14px; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.75); transition: all 0.15s; border: none; background: none; font-family: var(--font); }
+    .topnav-tab:hover { background: rgba(255,255,255,0.12); color: white; }
+    .topnav-tab.active { background: rgba(255,255,255,0.2); color: white; }
+    .main { max-width: 1280px; margin: 0 auto; padding: 20px; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 10px; flex-wrap: wrap; }
+    .page-title { font-size: 20px; font-weight: 700; }
+    .page-header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; font-family: var(--font); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-outline { background: white; color: var(--gray-700); border: 1px solid var(--gray-300); }
+    .btn-outline:hover { background: var(--gray-50); }
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { background: #047857; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { background: #B91C1C; }
+    .btn-ghost { background: none; border: none; color: var(--gray-500); cursor: pointer; padding: 6px; border-radius: var(--radius-sm); transition: all 0.15s; font-family: var(--font); font-size: 13px; }
+    .btn-ghost:hover { background: var(--gray-100); color: var(--gray-700); }
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+    .btn-xs { padding: 3px 8px; font-size: 11px; }
+    .search-bar { display: flex; align-items: center; gap: 8px; background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 7px 12px; min-width: 240px; box-shadow: var(--shadow-sm); }
+    .search-bar input { border: none; outline: none; font-size: 13px; background: none; flex: 1; font-family: var(--font); color: var(--gray-700); }
+    .search-bar input::placeholder { color: var(--gray-300); }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+    .card { background: white; border-radius: var(--radius); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); padding: 16px; transition: box-shadow 0.15s; }
+    .card:hover { box-shadow: var(--shadow-md); }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .card-title { font-size: 15px; font-weight: 700; }
+    .card-subtitle { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+    .card-actions { display: flex; gap: 2px; }
+    .card-body { display: flex; flex-direction: column; gap: 7px; }
+    .card-row { display: flex; gap: 6px; align-items: flex-start; font-size: 13px; color: var(--gray-600); }
+    .card-row-label { color: var(--gray-400); min-width: 68px; font-size: 12px; flex-shrink: 0; }
+    .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+    .tag { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+    .tag-default { background: var(--gray-100); color: var(--gray-600); border: 1px solid var(--gray-200); }
+    .tag-primary { background: var(--primary-light); color: var(--primary); }
+    .tag-success { background: var(--success-light); color: var(--success); }
+    .tag-warning { background: var(--warning-light); color: #92400E; }
+    .tag-danger { background: var(--danger-light); color: var(--danger); }
+    .tag-info { background: var(--info-light); color: var(--info); }
+    .tag-purple { background: var(--purple-light); color: var(--purple); }
+    .tag-remove { cursor: pointer; opacity: 0.6; margin-left: 2px; }
+    .tag-remove:hover { opacity: 1; }
+    .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .status-available { background: var(--success-light); color: var(--success); }
+    .status-soon { background: var(--warning-light); color: #92400E; }
+    .status-unavailable { background: var(--gray-100); color: var(--gray-500); }
+    .status-recruiting { background: var(--primary-light); color: var(--primary); }
+    .status-closed { background: var(--gray-100); color: var(--gray-500); }
+    .score-ideal { background: var(--success-light); color: var(--success); }
+    .score-strong { background: var(--info-light); color: var(--info); }
+    .score-consider { background: var(--warning-light); color: #92400E; }
+    .score-review { background: var(--danger-light); color: var(--danger); }
+    .ws-remote { background: #EDE9FE; color: #7C3AED; }
+    .ws-onsite { background: var(--warning-light); color: #92400E; }
+    .ws-hybrid { background: var(--success-light); color: var(--success); }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; display: flex; align-items: flex-start; justify-content: center; padding: 32px 16px; overflow-y: auto; }
+    .modal { background: white; border-radius: var(--radius); box-shadow: var(--shadow-lg); width: 100%; max-width: 640px; animation: modalIn 0.15s ease; }
+    .modal-lg { max-width: 820px; }
+    @keyframes modalIn { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+    .modal-header { padding: 18px 22px 14px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; }
+    .modal-title { font-size: 16px; font-weight: 700; }
+    .modal-close { background: none; border: none; cursor: pointer; color: var(--gray-400); font-size: 18px; padding: 4px; border-radius: 4px; transition: all 0.15s; }
+    .modal-close:hover { background: var(--gray-100); color: var(--gray-700); }
+    .modal-body { padding: 18px 22px; max-height: 70vh; overflow-y: auto; }
+    .modal-footer { padding: 14px 22px; border-top: 1px solid var(--gray-100); display: flex; justify-content: flex-end; gap: 8px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--gray-600); }
+    .form-label .req { color: var(--danger); margin-left: 2px; }
+    .form-input, .form-select, .form-textarea { padding: 8px 11px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 13px; font-family: var(--font); color: var(--gray-800); background: white; transition: border-color 0.15s; outline: none; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.08); }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-hint { font-size: 11px; color: var(--gray-400); }
+    .skill-tag-input { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); background: white; cursor: text; min-height: 40px; align-items: center; transition: border-color 0.15s; }
+    .skill-tag-input:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.08); }
+    .skill-tag-input input { border: none; outline: none; font-size: 13px; font-family: var(--font); flex: 1; min-width: 100px; background: none; }
+    .skill-suggestions { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; }
+    .skill-sug-btn { padding: 2px 7px; border-radius: 20px; font-size: 11px; background: var(--gray-100); color: var(--gray-600); border: 1px solid var(--gray-200); cursor: pointer; transition: all 0.15s; }
+    .skill-sug-btn:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+    .radio-group { display: flex; gap: 6px; flex-wrap: wrap; }
+    .radio-option { display: flex; align-items: center; gap: 4px; padding: 5px 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; color: var(--gray-600); transition: all 0.15s; }
+    .radio-option:has(input:checked) { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+    .range-row { display: flex; align-items: center; gap: 6px; }
+    .range-row span { color: var(--gray-400); flex-shrink: 0; }
+    .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 500; display: flex; flex-direction: column; gap: 6px; }
+    .toast { background: var(--gray-800); color: white; padding: 10px 16px; border-radius: var(--radius-sm); font-size: 13px; box-shadow: var(--shadow-lg); animation: toastIn 0.2s ease; display: flex; align-items: center; gap: 8px; }
+    .toast-success { background: var(--success); }
+    .toast-danger { background: var(--danger); }
+    @keyframes toastIn { from { opacity:0; transform:translateX(16px); } to { opacity:1; transform:translateX(0); } }
+    .empty-state { text-align: center; padding: 56px 20px; color: var(--gray-400); }
+    .empty-state-icon { font-size: 44px; margin-bottom: 10px; }
+    .empty-state-title { font-size: 15px; font-weight: 600; color: var(--gray-500); margin-bottom: 4px; }
+    .stats-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+    .stat-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 12px 16px; flex: 1; min-width: 110px; box-shadow: var(--shadow-sm); }
+    .stat-card-value { font-size: 22px; font-weight: 800; color: var(--primary); }
+    .stat-card-label { font-size: 11px; color: var(--gray-500); margin-top: 1px; }
+    .confirm-dialog { background: white; border-radius: var(--radius); padding: 26px 22px 18px; max-width: 360px; width: 100%; box-shadow: var(--shadow-lg); }
+    .confirm-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .confirm-body { font-size: 13px; color: var(--gray-600); margin-bottom: 18px; line-height: 1.6; }
+    .confirm-actions { display: flex; justify-content: flex-end; gap: 8px; }
+    /* Matching */
+    .matching-selector { background: white; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .matching-selector label { font-weight: 600; color: var(--gray-700); white-space: nowrap; }
+    .matching-selector select { flex: 1; min-width: 200px; padding: 8px 11px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 14px; font-family: var(--font); outline: none; background: white; }
+    .matching-selector select:focus { border-color: var(--primary); }
+    .project-detail-box { background: linear-gradient(135deg,var(--primary-light) 0%,white 100%); border: 1px solid rgba(79,70,229,0.18); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 16px; }
+    .project-detail-title { font-size: 15px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; }
+    .project-detail-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap: 8px; }
+    .pdi-label { font-size: 11px; color: var(--gray-400); }
+    .pdi-value { font-size: 13px; font-weight: 600; color: var(--gray-700); }
+    .match-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); margin-bottom: 10px; overflow: hidden; }
+    .match-card-head { display: flex; align-items: center; padding: 14px 16px; cursor: pointer; gap: 10px; transition: background 0.1s; }
+    .match-card-head:hover { background: var(--gray-50); }
+    .score-circle { width: 52px; height: 52px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 800; font-size: 17px; flex-shrink: 0; line-height: 1; border: 2px solid; }
+    .score-circle small { font-size: 10px; font-weight: 500; }
+    .sc-ideal { background: var(--success-light); color: var(--success); border-color: var(--success); }
+    .sc-strong { background: var(--info-light); color: var(--info); border-color: var(--info); }
+    .sc-consider { background: var(--warning-light); color: #92400E; border-color: var(--warning); }
+    .sc-review { background: var(--danger-light); color: var(--danger); border-color: var(--danger); }
+    .match-info { flex: 1; min-width: 0; }
+    .match-name { font-size: 15px; font-weight: 700; }
+    .match-meta { font-size: 12px; color: var(--gray-500); margin-top: 1px; }
+    .match-skill-row { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; }
+    .match-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+    .match-body { border-top: 1px solid var(--gray-100); padding: 16px; display: none; }
+    .match-body.open { display: block; }
+    .score-bars { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .score-bar-row { display: flex; align-items: center; gap: 8px; }
+    .score-bar-label { font-size: 12px; color: var(--gray-600); width: 100px; flex-shrink: 0; }
+    .score-bar-track { flex: 1; height: 7px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
+    .score-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s; }
+    .score-bar-val { font-size: 12px; font-weight: 600; width: 34px; text-align: right; }
+    .advice-box { background: var(--primary-light); border: 1px solid rgba(79,70,229,0.15); border-radius: var(--radius-sm); padding: 14px; margin-top: 14px; }
+    .advice-title { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+    .advice-sec { margin-bottom: 10px; }
+    .advice-sec:last-child { margin-bottom: 0; }
+    .advice-sec-title { font-size: 11px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+    .advice-sec-body { font-size: 13px; color: var(--gray-700); line-height: 1.7; }
+    /* Proposals */
+    .proposal-table { width: 100%; border-collapse: collapse; background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); }
+    .proposal-table th { background: var(--gray-50); font-size: 12px; font-weight: 600; color: var(--gray-500); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--gray-200); }
+    .proposal-table td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+    .proposal-table tr:last-child td { border-bottom: none; }
+    .proposal-table tr:hover td { background: var(--gray-50); }
+    .status-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; }
+    .ps-提案中 { background: var(--primary-light); color: var(--primary); }
+    .ps-面談設定 { background: var(--purple-light); color: var(--purple); }
+    .ps-面談済み { background: var(--info-light); color: var(--info); }
+    .ps-結果待ち { background: var(--warning-light); color: #92400E; }
+    .ps-決定 { background: var(--success-light); color: var(--success); }
+    .ps-NG { background: var(--danger-light); color: var(--danger); }
+    /* Upload */
+    .upload-zone { border: 2px dashed var(--gray-300); border-radius: var(--radius-sm); padding: 24px; text-align: center; cursor: pointer; transition: all 0.15s; color: var(--gray-400); }
+    .upload-zone:hover, .upload-zone.drag { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+    .upload-progress { background: var(--gray-100); border-radius: var(--radius-sm); padding: 12px; margin-top: 10px; }
+    .upload-prog-bar { height: 4px; background: var(--gray-200); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+    .upload-prog-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width 0.3s; }
+    /* Summary paste */
+    .summary-parsed { background: var(--success-light); border: 1px solid var(--success); border-radius: var(--radius-sm); padding: 12px; margin-top: 10px; font-size: 12px; color: #065F46; }
+    /* Skills with years */
+    .skill-year-list { display: flex; flex-direction: column; gap: 6px; }
+    .skill-year-row { display: grid; grid-template-columns: 1fr 90px 90px auto; gap: 6px; align-items: center; }
+    .skill-year-row input { padding: 5px 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 12px; font-family: var(--font); outline: none; }
+    .skill-year-row input:focus { border-color: var(--primary); }
+    .skill-year-calc { font-size: 11px; color: var(--gray-500); }
+    /* Client view toggle */
+    .client-view-bar { background: #FEF3C7; border: 1px solid #F59E0B; border-radius: var(--radius-sm); padding: 8px 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; font-size: 13px; color: #92400E; }
+    /* Divider */
+    .divider { height: 1px; background: var(--gray-100); margin: 10px 0; }
+    /* Responsive */
+    @media (max-width: 640px) {
+      .main { padding: 12px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .card-grid { grid-template-columns: 1fr; }
+      .topnav-logo span { display: none; }
+      .topnav-tab { padding: 7px 10px; font-size: 12px; }
+      .proposal-table { font-size: 12px; }
+      .proposal-table th, .proposal-table td { padding: 8px 10px; }
+    }
+    @media print {
+      .topnav, .page-header .btn, .card-actions, .modal-overlay { display: none !important; }
+      .main { max-width: 100%; padding: 10px; }
+      .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback, useMemo, useRef } = React;
+
+// ── CONSTANTS ──────────────────────────────────────────────
+const PREFECTURES = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県","フルリモート"];
+const SKILL_SUGS = ["Java","Python","JavaScript","TypeScript","PHP","Ruby","Go","Kotlin","Swift","C#","C++","React","Vue.js","Angular","Next.js","Spring Boot","Laravel","Django","Rails","Node.js","FastAPI","AWS","GCP","Azure","Docker","Kubernetes","Terraform","Linux","MySQL","PostgreSQL","Oracle","MongoDB","Redis","Git","CI/CD","Jenkins","GitHub Actions","Agile","Scrum","PM","要件定義","基本設計","詳細設計","テスト設計","運用保守"];
+const WS_LABELS = { remote:"フルリモート", onsite:"常駐", hybrid:"ハイブリッド" };
+const WS_CLS = { remote:"ws-remote", onsite:"ws-onsite", hybrid:"ws-hybrid" };
+const PROPOSAL_STATUSES = ["提案中","面談設定","面談済み","結果待ち","決定","NG"];
+
+// ── UTILS ──────────────────────────────────────────────────
+const uuid = () => typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID()
+  : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&0x3|0x8)).toString(16);});
+const now = () => new Date().toISOString();
+
+const formatDate = iso => {
+  if (!iso) return '未定';
+  const d = new Date(iso); if (isNaN(d)) return iso;
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+};
+const formatRate = yen => (!yen||yen===0) ? '要相談' : `${Math.round(yen/10000)}万円`;
+
+const normSkill = s => s.toLowerCase().replace(/[\s\-\.・]/g,'').replace(/[\uFF01-\uFF5E]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0));
+const skillIntersect = (a,b) => { const nb=b.map(normSkill); return a.filter(x=>nb.includes(normSkill(x))); };
+const skillDiff = (req,has) => { const nh=has.map(normSkill); return req.filter(x=>!nh.includes(normSkill(x))); };
+
+// Parse YYYYMM range → months
+const parseYearMonth = ym => {
+  const s = String(ym).replace(/[^0-9]/g,'');
+  if (s.length === 6) return { y: parseInt(s.slice(0,4)), m: parseInt(s.slice(4,6)) };
+  return null;
+};
+const calcMonths = (from, to) => {
+  const f = parseYearMonth(from), t = parseYearMonth(to || '');
+  if (!f) return 0;
+  const end = t || (() => { const d=new Date(); return {y:d.getFullYear(),m:d.getMonth()+1}; })();
+  return Math.max(0,(end.y - f.y)*12 + (end.m - f.m));
+};
+const monthsToText = m => {
+  if (m <= 0) return '';
+  const y = Math.floor(m/12), mo = m%12;
+  if (y === 0) return `${mo}ヶ月`;
+  if (mo === 0) return `${y}年`;
+  return `${y}年${mo}ヶ月`;
+};
+
+const getEngineerStatus = avail => {
+  if (!avail) return { label:'調整中', cls:'status-soon' };
+  const today = new Date(); today.setHours(0,0,0,0);
+  const d = new Date(avail); d.setHours(0,0,0,0);
+  const days = Math.round((d-today)/86400000);
+  if (days <= 0) return { label:'稼働可能', cls:'status-available' };
+  if (days <= 30) return { label:`${days}日後`, cls:'status-soon' };
+  return { label:formatDate(avail)+'〜', cls:'status-unavailable' };
+};
+
+// ── MATCHING ───────────────────────────────────────────────
+function calcMatch(engineer, project) {
+  const req = project.requiredSkills || [];
+  const engSkills = engineer.skills || [];
+  const matched = skillIntersect(engSkills, req);
+  const missing = skillDiff(req, engSkills);
+  let skillScore = req.length > 0 ? (matched.length/req.length)*100 : 0;
+  if (matched.length === req.length && req.length > 0) skillScore = Math.min(100, skillScore+5);
+
+  let timingScore = 50;
+  if (engineer.availableDate && project.startDate) {
+    const d = Math.round((new Date(project.startDate)-new Date(engineer.availableDate))/86400000);
+    if      (d>=0&&d<=14)   timingScore=100;
+    else if (d>14&&d<=30)   timingScore=85;
+    else if (d>30&&d<=60)   timingScore=65;
+    else if (d>60)          timingScore=40;
+    else if (d>=-14)        timingScore=75;
+    else if (d>=-30)        timingScore=45;
+    else                    timingScore=10;
+  }
+
+  const ews = engineer.workStyle||'hybrid', pws = project.workStyle||'onsite';
+  const same = engineer.prefecture === project.prefecture;
+  let locScore;
+  if (pws==='remote') locScore=95;
+  else if (engineer.prefecture==='フルリモート') locScore = pws==='onsite'?20:pws==='hybrid'?65:95;
+  else if (pws==='onsite') {
+    if (ews==='remote') locScore=20;
+    else if (ews==='onsite') locScore=same?100:35;
+    else locScore=same?85:40;
+  } else {
+    if (ews==='remote') locScore=65;
+    else locScore=same?95:60;
+  }
+
+  // Supplementary conditions penalty
+  const conds = engineer.conditions || [];
+  let condPenalty = 0;
+  if (conds.includes('リモート希望') && pws==='onsite') condPenalty+=15;
+  if (conds.includes('常駐NG') && pws==='onsite') condPenalty+=20;
+
+  const bMax = project.budgetMax||0;
+  let reqLevel = bMax<=400000?1:bMax<=550000?2:bMax<=700000?3:4;
+  const yrs = engineer.experienceYears||0;
+  let engLevel = yrs<=2?1:yrs<=5?2:yrs<=10?3:4;
+  const diff = engLevel-reqLevel;
+  let expScore = diff===0?100:diff===1?80:diff===-1?60:diff===2?50:diff===-2?30:10;
+  const rate = engineer.desiredRate||0;
+  const bMin = project.budgetMin||0;
+  if (rate>0&&bMax>0) {
+    if (rate>=bMin&&rate<=bMax) expScore=Math.min(100,expScore+15);
+    else if (rate<bMin) expScore=Math.min(100,expScore+10);
+  }
+
+  const total = Math.max(0,Math.min(100,Math.round(
+    skillScore*0.40 + timingScore*0.25 + locScore*0.20 + expScore*0.15 - condPenalty
+  )));
+  return { total, breakdown:{ skillScore:Math.round(skillScore), timingScore:Math.round(timingScore), locScore:Math.round(locScore), expScore:Math.round(expScore) }, matched, missing };
+}
+
+function scoreLabel(s) {
+  if (s>=80) return { label:'最適候補', cls:'score-ideal', cirCls:'sc-ideal' };
+  if (s>=60) return { label:'有力候補', cls:'score-strong', cirCls:'sc-strong' };
+  if (s>=40) return { label:'検討候補', cls:'score-consider', cirCls:'sc-consider' };
+  return { label:'要確認', cls:'score-review', cirCls:'sc-review' };
+}
+
+// ── ADVICE ─────────────────────────────────────────────────
+function genAdvice(engineer, project, mr) {
+  const { total, breakdown, matched, missing } = mr;
+  const { skillScore, timingScore, locScore, expScore } = breakdown;
+  const sections = [];
+
+  let open = total>=80 ? `【推薦】${engineer.name}様は本案件に非常に高い適合性があります。`
+    : total>=60 ? `【提案推奨】${engineer.name}様は案件要件を概ね満たしています。`
+    : total>=40 ? `【条件付き提案】条件調整を前提に提案可能です。`
+    : `【要検討】いくつかの課題点を確認・調整の上で提案を検討してください。`;
+  sections.push({ title:'総合評価', body:open });
+
+  let skillBody = missing.length===0&&matched.length>0
+    ? `必須スキル（${(project.requiredSkills||[]).join('・')}）をすべて保有。即戦力としてアピールできます。`
+    : matched.length>0
+    ? `【強み】${matched.join('・')} の経験あり。\n【要確認】${missing.join('・')} の経験不足。補完計画をヒアリングしてください。`
+    : `必須スキルとの一致がありません。類似技術や補完計画の整理が必要です。`;
+  sections.push({ title:'スキル面', body:skillBody });
+
+  let timingBody = '稼働日・開始日未設定のため確認が必要です。';
+  if (engineer.availableDate && project.startDate) {
+    const d = Math.round((new Date(project.startDate)-new Date(engineer.availableDate))/86400000);
+    timingBody = d>=0&&d<=14 ? `稼働タイミングが案件開始と完璧に合致しています。`
+      : d>14 ? `案件開始より${d}日早く稼働可能。先行参画のメリットを提案できます。`
+      : d>=-14 ? `案件開始より約${Math.abs(d)}日の遅れ。クライアントへ事前調整を推奨します。`
+      : `稼働遅れ${Math.abs(d)}日。別候補との並行提案を検討してください。`;
+  }
+  sections.push({ title:'タイミング', body:timingBody });
+
+  const ews=engineer.workStyle, pws=project.workStyle;
+  let locBody = locScore>=90 ? `勤務スタイル・場所が完全に一致しています。`
+    : locScore>=65 ? `多少の違いはありますが交渉の余地があります。（エンジニア:${WS_LABELS[ews]}／案件:${WS_LABELS[pws]}）`
+    : `勤務条件に大きな乖離があります。（エンジニア:${WS_LABELS[ews]}／案件:${WS_LABELS[pws]}）双方の条件確認が必要です。`;
+  const conds = engineer.conditions||[];
+  if (conds.length>0) locBody += `\n補足条件: ${conds.join('・')}`;
+  sections.push({ title:'勤務条件', body:locBody });
+
+  const rate=engineer.desiredRate||0, bMin=project.budgetMin||0, bMax=project.budgetMax||0;
+  let rateBody = rate===0 ? `希望単価未設定。面談前に確認してください。`
+    : bMax===0 ? `案件予算未設定。エンジニア希望（${formatRate(rate)}）を参考に確認を。`
+    : rate>=bMin&&rate<=bMax ? `希望単価（${formatRate(rate)}）は予算（${formatRate(bMin)}〜${formatRate(bMax)}）に収まっており交渉しやすい状況です。`
+    : rate<bMin ? `希望単価（${formatRate(rate)}）は予算下限を下回っておりコスト面で有利です。`
+    : `希望単価（${formatRate(rate)}）が予算上限（${formatRate(bMax)}）を${Math.round((rate-bMax)/10000)}万円超過。単価調整を検討してください。`;
+  const actions = [];
+  if (missing.length>0) actions.push(`「${missing.slice(0,2).join('・')}」スキル確認`);
+  if (timingScore<60) actions.push('稼働日調整');
+  if (locScore<60) actions.push('勤務条件の確認');
+  if (rate>bMax&&bMax>0) actions.push('単価交渉');
+  rateBody += '\n\n' + (actions.length>0 ? `【次のアクション】${actions.join(' → ')}` : '面談設定を速やかに進めることを推奨します。');
+  sections.push({ title:'単価・次のアクション', body:rateBody });
+  return sections;
+}
+
+// ── SAMPLE DATA ────────────────────────────────────────────
+const SAMPLE_ENGINEERS = [
+  { id:uuid(), name:"田中 健太", affiliation:"株式会社テックパートナーズ", skills:["Java","Spring Boot","PostgreSQL","AWS","Docker"], skillProjects:[{id:uuid(),skill:"Java",from:"202001",to:"202403"},{id:uuid(),skill:"AWS",from:"202101",to:"202403"}], experienceYears:7, availableDate:"2026-04-01", prefecture:"東京都", nearestStation:"渋谷駅", workStyle:"hybrid", desiredRate:700000, conditions:[], notes:"チームリード3年。要件定義〜実装対応可。", createdAt:now(), updatedAt:now() },
+  { id:uuid(), name:"鈴木 美咲", affiliation:"フリーランス", skills:["React","TypeScript","Node.js","AWS","Next.js"], skillProjects:[{id:uuid(),skill:"React",from:"202104",to:"202403"},{id:uuid(),skill:"TypeScript",from:"202104",to:"202403"}], experienceYears:4, availableDate:"2026-03-25", prefecture:"神奈川県", nearestStation:"横浜駅", workStyle:"remote", desiredRate:600000, conditions:["リモート希望"], notes:"フロントエンド専門。デザインシステム構築経験あり。", createdAt:now(), updatedAt:now() },
+  { id:uuid(), name:"山本 大輔", affiliation:"株式会社データテック", skills:["Python","Django","AWS","Docker","機械学習"], skillProjects:[{id:uuid(),skill:"Python",from:"202001",to:"202403"},{id:uuid(),skill:"機械学習",from:"202201",to:"202403"}], experienceYears:5, availableDate:"2026-05-01", prefecture:"大阪府", nearestStation:"梅田駅", workStyle:"hybrid", desiredRate:650000, conditions:[], notes:"データ分析・ML基盤構築経験あり。", createdAt:now(), updatedAt:now() },
+  { id:uuid(), name:"佐藤 愛子", affiliation:"株式会社システムクリエイト", skills:["PHP","Laravel","MySQL","Vue.js","Linux"], skillProjects:[{id:uuid(),skill:"PHP",from:"202101",to:"202403"},{id:uuid(),skill:"Laravel",from:"202201",to:"202403"}], experienceYears:3, availableDate:"2026-04-15", prefecture:"東京都", nearestStation:"新宿駅", workStyle:"onsite", desiredRate:500000, conditions:[], notes:"中規模ECサイト開発・運用経験あり。", createdAt:now(), updatedAt:now() },
+];
+const SAMPLE_PROJECTS = [
+  { id:uuid(), projectName:"ECサイトリニューアル", clientName:"株式会社フューチャーコマース", requiredSkills:["React","TypeScript","Node.js","AWS"], startDate:"2026-04-10", endDate:"2026-09-30", prefecture:"東京都", workStyle:"hybrid", budgetMin:550000, budgetMax:700000, headcount:2, description:"既存ECサイトのReact/TypeScript移行案件。", createdAt:now(), updatedAt:now() },
+  { id:uuid(), projectName:"基幹システム刷新（Java）", clientName:"株式会社テックソリューション", requiredSkills:["Java","Spring Boot","PostgreSQL","Docker"], startDate:"2026-04-01", endDate:"2026-12-31", prefecture:"東京都", workStyle:"onsite", budgetMin:600000, budgetMax:750000, headcount:3, description:"老朽基幹システムをSpring Boot+PostgreSQLで刷新。設計フェーズから参画。", createdAt:now(), updatedAt:now() },
+  { id:uuid(), projectName:"データ分析基盤構築", clientName:"大手流通グループ", requiredSkills:["Python","AWS","機械学習","Docker"], startDate:"2026-05-01", endDate:"2027-03-31", prefecture:"大阪府", workStyle:"remote", budgetMin:600000, budgetMax:800000, headcount:1, description:"SageMaker/Redshift活用のMLパイプライン設計・実装。", createdAt:now(), updatedAt:now() },
+];
+
+// ── LOCAL STORAGE ──────────────────────────────────────────
+function useLS(key, init) {
+  const [s, ss] = useState(() => { try { const v=localStorage.getItem(key); return v?JSON.parse(v):init; } catch { return init; } });
+  const set = useCallback(v => { ss(p => { const n=typeof v==='function'?v(p):v; try{localStorage.setItem(key,JSON.stringify(n));}catch{} return n; }); }, [key]);
+  return [s, set];
+}
+
+// ── SHARED COMPONENTS ──────────────────────────────────────
+function Modal({ title, onClose, children, footer, lg }) {
+  useEffect(() => { const h=e=>{if(e.key==='Escape')onClose();}; document.addEventListener('keydown',h); return()=>document.removeEventListener('keydown',h); },[onClose]);
+  return (
+    <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className={`modal ${lg?'modal-lg':''}`}>
+        <div className="modal-header">
+          <div className="modal-title">{title}</div>
+          <button className="modal-close" onClick={onClose}>✕</button>
+        </div>
+        <div className="modal-body">{children}</div>
+        {footer && <div className="modal-footer">{footer}</div>}
+      </div>
+    </div>
+  );
+}
+
+function SkillTagInput({ value, onChange, placeholder }) {
+  const [inp, setInp] = useState('');
+  const ref = useRef(null);
+  const add = s => { const t=s.trim(); if(t&&!value.map(normSkill).includes(normSkill(t))) onChange([...value,t]); setInp(''); };
+  const sugs = SKILL_SUGS.filter(s=>!value.map(normSkill).includes(normSkill(s))&&(inp===''||normSkill(s).includes(normSkill(inp)))).slice(0,16);
+  return (
+    <div>
+      <div className="skill-tag-input" onClick={()=>ref.current?.focus()}>
+        {value.map((s,i)=><span key={i} className="tag tag-primary">{s}<span className="tag-remove" onClick={e=>{e.stopPropagation();onChange(value.filter((_,j)=>j!==i));}}>✕</span></span>)}
+        <input ref={ref} value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'||e.key===','){e.preventDefault();add(inp);}if(e.key==='Backspace'&&!inp&&value.length>0)onChange(value.slice(0,-1));}} onBlur={()=>{if(inp.trim())add(inp);}} placeholder={value.length===0?(placeholder||'スキルを入力しEnterで追加'):''}/>
+      </div>
+      {sugs.length>0&&<div className="skill-suggestions">{sugs.map(s=><button key={s} type="button" className="skill-sug-btn" onClick={()=>add(s)}>{s}</button>)}</div>}
+    </div>
+  );
+}
+
+function WsBadge({ ws }) { return <span className={`badge ${WS_CLS[ws]||''}`}>{WS_LABELS[ws]||ws}</span>; }
+
+function ConfirmDialog({ title, message, onConfirm, onCancel }) {
+  return (
+    <div className="modal-overlay" onClick={onCancel}>
+      <div className="confirm-dialog" onClick={e=>e.stopPropagation()}>
+        <div className="confirm-title">{title}</div>
+        <div className="confirm-body">{message}</div>
+        <div className="confirm-actions">
+          <button className="btn btn-outline" onClick={onCancel}>キャンセル</button>
+          <button className="btn btn-danger" onClick={onConfirm}>削除する</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ScoreBar({ label, score }) {
+  const c = score>=80?'#059669':score>=60?'#0284C7':score>=40?'#D97706':'#DC2626';
+  return (
+    <div className="score-bar-row">
+      <div className="score-bar-label">{label}</div>
+      <div className="score-bar-track"><div className="score-bar-fill" style={{width:`${score}%`,background:c}}/></div>
+      <div className="score-bar-val" style={{color:c}}>{score}%</div>
+    </div>
+  );
+}
+
+// ── SKILL PROJECTS EDITOR ──────────────────────────────────
+function SkillProjectsEditor({ value, onChange }) {
+  const add = () => onChange([...value,{id:uuid(),skill:'',from:'',to:''}]);
+  const upd = (i,k,v) => { const n=[...value]; n[i]={...n[i],[k]:v}; onChange(n); };
+  const del = i => onChange(value.filter((_,j)=>j!==i));
+  return (
+    <div>
+      <div className="skill-year-list">
+        <div style={{display:'grid',gridTemplateColumns:'1fr 90px 90px auto',gap:6,marginBottom:4}}>
+          <span style={{fontSize:11,color:'var(--gray-400)'}}>スキル</span>
+          <span style={{fontSize:11,color:'var(--gray-400)'}}>開始(YYYYMM)</span>
+          <span style={{fontSize:11,color:'var(--gray-400)'}}>終了(空=現在)</span>
+          <span/>
+        </div>
+        {value.map((sp,i)=>{
+          const m=calcMonths(sp.from,sp.to);
+          return (
+            <div key={sp.id} className="skill-year-row">
+              <input value={sp.skill} onChange={e=>upd(i,'skill',e.target.value)} placeholder="Java"/>
+              <input value={sp.from} onChange={e=>upd(i,'from',e.target.value)} placeholder="202001"/>
+              <input value={sp.to} onChange={e=>upd(i,'to',e.target.value)} placeholder="202412"/>
+              <div style={{display:'flex',alignItems:'center',gap:6}}>
+                {m>0&&<span className="skill-year-calc">{monthsToText(m)}</span>}
+                <button type="button" className="btn-ghost" onClick={()=>del(i)} style={{padding:'2px 6px',fontSize:12}}>✕</button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <button type="button" className="btn btn-outline btn-sm" style={{marginTop:8}} onClick={add}>＋ 行を追加</button>
+    </div>
+  );
+}
+
+// ── SUMMARY PASTE MODAL ────────────────────────────────────
+function SummaryPasteModal({ onParsed, onClose }) {
+  const [text, setText] = useState('');
+  const [parsed, setParsed] = useState(null);
+
+  const doParse = () => {
+    // Split by tabs or multiple spaces/
+    const cols = text.split(/\t|　{2,}| {3,}/).map(s=>s.trim()).filter(Boolean);
+    // Expected: 氏名 最寄駅 通勤 稼働 所属 単価 面談 工程 ツール OS
+    const result = {
+      name: cols[0]||'',
+      nearestStation: cols[1]||'',
+      // cols[2] = 通勤
+      availableDate: '',
+      affiliation: cols[4]||'',
+      desiredRate: '',
+      notes: '',
+      skills: [],
+    };
+    // Parse availableDate from cols[3]
+    const avail = cols[3]||'';
+    const dm = avail.match(/(\d{4})[\/\-年](\d{1,2})[\/\-月]?(\d{0,2})/);
+    if (dm) {
+      const mo = String(dm[2]).padStart(2,'0');
+      const day = dm[3] ? String(dm[3]).padStart(2,'0') : '01';
+      result.availableDate = `${dm[1]}-${mo}-${day}`;
+    } else {
+      // Try YYYYMM
+      const ym = avail.match(/(\d{4})(\d{2})/);
+      if (ym) result.availableDate = `${ym[1]}-${ym[2]}-01`;
+    }
+    // Parse rate from cols[5]
+    const rateStr = (cols[5]||'').replace(/[^\d]/g,'');
+    if (rateStr) {
+      const n = parseInt(rateStr);
+      result.desiredRate = n < 1000 ? n*10000 : n;
+    }
+    // Tools/skills from cols[8]
+    if (cols[8]) result.skills = cols[8].split(/[,、・\s]+/).filter(Boolean);
+    // OS
+    if (cols[9]) result.notes = `OS: ${cols[9]}`;
+    // Process
+    if (cols[7]) result.notes = `工程: ${cols[7]}` + (result.notes ? ' / ' + result.notes : '');
+    setParsed(result);
+  };
+
+  return (
+    <Modal title="サマリーを貼り付け" onClose={onClose} footer={
+      <>
+        <button className="btn btn-outline" onClick={onClose}>キャンセル</button>
+        {parsed && <button className="btn btn-primary" onClick={()=>onParsed(parsed)}>この内容で登録フォームに反映</button>}
+      </>
+    }>
+      <p style={{fontSize:13,color:'var(--gray-600)',marginBottom:10}}>
+        サマリーテキストをそのまま貼り付けてください。<br/>
+        <span style={{fontSize:11,color:'var(--gray-400)'}}>形式：氏名　最寄駅　通勤　稼働　所属　単価　面談　工程　ツール　OS</span>
+      </p>
+      <textarea className="form-textarea" style={{minHeight:100,width:'100%'}} value={text} onChange={e=>setText(e.target.value)} placeholder={"田中 健太　渋谷駅　1時間以内　2026/04/01　株式会社ABC　65万　可　設計/開発　Java,Spring Boot　Windows/Linux"}/>
+      <button className="btn btn-primary btn-sm" style={{marginTop:8}} onClick={doParse} disabled={!text.trim()}>解析する</button>
+      {parsed && (
+        <div className="summary-parsed">
+          <strong>解析結果：</strong><br/>
+          氏名: {parsed.name || '—'} ／ 最寄駅: {parsed.nearestStation || '—'} ／ 所属: {parsed.affiliation || '—'}<br/>
+          稼働: {parsed.availableDate || '—'} ／ 単価: {formatRate(parsed.desiredRate)}<br/>
+          スキル: {parsed.skills.join(', ') || '—'}<br/>
+          {parsed.notes && <>備考: {parsed.notes}</>}
+        </div>
+      )}
+    </Modal>
+  );
+}
+
+// ── FILE UPLOAD MODAL ──────────────────────────────────────
+function FileUploadModal({ engineerId, engineerName, onClose, onToast }) {
+  const [phase, setPhase] = useState('idle'); // idle | removing | done
+  const [fileName, setFileName] = useState('');
+  const [prog, setProg] = useState(0);
+  const inputRef = useRef(null);
+
+  const handleFile = e => {
+    const f = e.target.files[0]; if (!f) return;
+    setFileName(f.name);
+    setPhase('removing');
+    setProg(0);
+    // Simulate metadata removal progress
+    let p = 0;
+    const iv = setInterval(()=>{
+      p += Math.random()*25+10;
+      if (p>=100) { p=100; clearInterval(iv); setPhase('done'); }
+      setProg(Math.round(p));
+    }, 200);
+  };
+
+  return (
+    <Modal title="スキルシートをアップロード" onClose={onClose} footer={
+      <>
+        <button className="btn btn-outline" onClick={onClose}>閉じる</button>
+        {phase==='done' && <button className="btn btn-success" onClick={()=>{onToast('スキルシートをアップロードしました','success');onClose();}}>保存する</button>}
+      </>
+    }>
+      <p style={{fontSize:13,color:'var(--gray-600)',marginBottom:14}}>
+        <strong>{engineerName}</strong> のスキルシートをアップロードします。<br/>
+        <span style={{fontSize:12,color:'var(--gray-400)'}}>アップロード時にPDF・Excelファイルのプロパティ（作成者・更新者）を自動削除します。</span>
+      </p>
+      {phase==='idle' && (
+        <div className="upload-zone" onClick={()=>inputRef.current?.click()}>
+          <div style={{fontSize:32,marginBottom:8}}>📎</div>
+          <div style={{fontWeight:600,marginBottom:4}}>クリックしてファイルを選択</div>
+          <div style={{fontSize:12}}>PDF・Excel（.pdf / .xlsx / .xls）</div>
+          <input ref={inputRef} type="file" accept=".pdf,.xlsx,.xls" style={{display:'none'}} onChange={handleFile}/>
+        </div>
+      )}
+      {(phase==='removing'||phase==='done') && (
+        <div className="upload-progress">
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',fontSize:13}}>
+            <span>📄 {fileName}</span>
+            <span style={{fontSize:12,color:phase==='done'?'var(--success)':'var(--gray-500)'}}>
+              {phase==='done' ? '✓ メタデータ削除完了' : `メタデータ削除中... ${prog}%`}
+            </span>
+          </div>
+          <div className="upload-prog-bar">
+            <div className="upload-prog-fill" style={{width:`${prog}%`}}/>
+          </div>
+          {phase==='done' && (
+            <div style={{marginTop:10,fontSize:12,color:'var(--success)',background:'var(--success-light)',padding:'8px 10px',borderRadius:6}}>
+              ✓ 作成者・更新者・会社名などのプロパティ情報を削除しました
+            </div>
+          )}
+        </div>
+      )}
+    </Modal>
+  );
+}
+
+// ── ENGINEER FORM ──────────────────────────────────────────
+const ENG_DEF = { name:'', affiliation:'', skills:[], skillProjects:[], experienceYears:'', availableDate:'', prefecture:'東京都', nearestStation:'', workStyle:'hybrid', desiredRate:'', conditions:[], notes:'' };
+
+function EngineerFormModal({ initial, onSave, onClose }) {
+  const [form, setForm] = useState({...ENG_DEF,...initial});
+  const [showSummary, setShowSummary] = useState(false);
+  const set = (k,v) => setForm(f=>({...f,[k]:v}));
+
+  const applyParsed = p => {
+    setForm(f=>({...f,...p}));
+    setShowSummary(false);
+  };
+
+  return (
+    <>
+      <Modal title={initial?.id?'要員情報を編集':'要員を追加'} onClose={onClose} lg footer={
+        <>
+          <button className="btn btn-outline" type="button" onClick={()=>setShowSummary(true)}>📋 サマリー貼り付け</button>
+          <div style={{flex:1}}/>
+          <button className="btn btn-outline" type="button" onClick={onClose}>キャンセル</button>
+          <button className="btn btn-primary" type="submit" form="eng-form">保存する</button>
+        </>
+      }>
+        <form id="eng-form" onSubmit={e=>{e.preventDefault();if(!form.name.trim())return alert('名前を入力してください');onSave(form);}}>
+          <div className="form-grid">
+            <div className="form-group">
+              <label className="form-label">氏名<span className="req">*</span></label>
+              <input className="form-input" value={form.name} onChange={e=>set('name',e.target.value)} placeholder="山田 太郎"/>
+            </div>
+            <div className="form-group">
+              <label className="form-label">所属会社</label>
+              <input className="form-input" value={form.affiliation} onChange={e=>set('affiliation',e.target.value)} placeholder="株式会社〇〇 / フリーランス"/>
+            </div>
+            <div className="form-group">
+              <label className="form-label">経験年数</label>
+              <input className="form-input" type="number" min="0" max="50" value={form.experienceYears} onChange={e=>set('experienceYears',parseInt(e.target.value)||'')} placeholder="5"/>
+            </div>
+            <div className="form-group">
+              <label className="form-label">稼働可能日</label>
+              <input className="form-input" type="date" value={form.availableDate} onChange={e=>set('availableDate',e.target.value)}/>
+            </div>
+            <div className="form-group full">
+              <label className="form-label">スキル</label>
+              <SkillTagInput value={form.skills} onChange={v=>set('skills',v)}/>
+            </div>
+            <div className="form-group full">
+              <label className="form-label">スキル経験詳細（プロジェクト単位）</label>
+              <SkillProjectsEditor value={form.skillProjects||[]} onChange={v=>set('skillProjects',v)}/>
+            </div>
+            <div className="form-group">
+              <label className="form-label">希望単価（月額）</label>
+              <input className="form-input" type="number" step="10000" min="0" value={form.desiredRate} onChange={e=>set('desiredRate',parseInt(e.target.value)||'')} placeholder="650000"/>
+              <span className="form-hint">{form.desiredRate?`→ ${formatRate(form.desiredRate)}`:'例: 650000'}</span>
+            </div>
+            <div className="form-group">
+              <label className="form-label">都道府県</label>
+              <select className="form-select" value={form.prefecture} onChange={e=>set('prefecture',e.target.value)}>
+                {PREFECTURES.map(p=><option key={p} value={p}>{p}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">最寄り駅</label>
+              <input className="form-input" value={form.nearestStation} onChange={e=>set('nearestStation',e.target.value)} placeholder="渋谷駅"/>
+            </div>
+            <div className="form-group">
+              <label className="form-label">希望勤務スタイル</label>
+              <div className="radio-group">
+                {[['remote','フルリモート'],['hybrid','ハイブリッド'],['onsite','常駐']].map(([v,l])=>(
+                  <label key={v} className="radio-option"><input type="radio" name="ews" value={v} checked={form.workStyle===v} onChange={()=>set('workStyle',v)}/>{l}</label>
+                ))}
+              </div>
+            </div>
+            <div className="form-group full">
+              <label className="form-label">補足条件</label>
+              <SkillTagInput value={form.conditions||[]} onChange={v=>set('conditions',v)} placeholder="例: リモート希望 / 常駐NG / 残業少なめ希望"/>
+            </div>
+            <div className="form-group full">
+              <label className="form-label">備考</label>
+              <textarea className="form-textarea" value={form.notes} onChange={e=>set('notes',e.target.value)} placeholder="資格、得意領域、特記事項など"/>
+            </div>
+          </div>
+        </form>
+      </Modal>
+      {showSummary && <SummaryPasteModal onParsed={applyParsed} onClose={()=>setShowSummary(false)}/>}
+    </>
+  );
+}
+
+function EngineerCard({ engineer, onEdit, onDelete, onUpload, clientView }) {
+  const status = getEngineerStatus(engineer.availableDate);
+  return (
+    <div className="card">
+      <div className="card-header">
+        <div>
+          <div className="card-title">{engineer.name}</div>
+          <div className="card-subtitle">
+            {engineer.experienceYears?`経験${engineer.experienceYears}年`:'経験年数未設定'} · {engineer.prefecture}
+            {!clientView && engineer.affiliation && ` · ${engineer.affiliation}`}
+          </div>
+        </div>
+        <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:5}}>
+          <span className={`badge ${status.cls}`}>{status.label}</span>
+          {!clientView && (
+            <div className="card-actions">
+              <button className="btn-ghost btn-sm" title="スキルシートUP" onClick={()=>onUpload(engineer)}>📎</button>
+              <button className="btn-ghost btn-sm" title="編集" onClick={()=>onEdit(engineer)}>✏️</button>
+              <button className="btn-ghost btn-sm" title="削除" onClick={()=>onDelete(engineer)}>🗑️</button>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="card-body">
+        {engineer.skills.length>0 && (
+          <div className="tags">
+            {engineer.skills.slice(0,8).map((s,i)=><span key={i} className="tag tag-default">{s}</span>)}
+            {engineer.skills.length>8&&<span className="tag tag-default">+{engineer.skills.length-8}</span>}
+          </div>
+        )}
+        {(engineer.skillProjects||[]).length>0 && (
+          <div style={{fontSize:12,color:'var(--gray-500)'}}>
+            {engineer.skillProjects.filter(sp=>sp.skill&&sp.from).slice(0,4).map((sp,i)=>{
+              const m=calcMonths(sp.from,sp.to);
+              return <span key={i} style={{marginRight:8}}>{sp.skill}: {monthsToText(m)||'計算中'}</span>;
+            })}
+          </div>
+        )}
+        <div className="card-row"><span className="card-row-label">稼働可能日</span><span>{formatDate(engineer.availableDate)}</span></div>
+        {!clientView && <div className="card-row"><span className="card-row-label">希望単価</span><span>{formatRate(engineer.desiredRate)}</span></div>}
+        <div className="card-row"><span className="card-row-label">最寄り駅</span><span>{engineer.nearestStation||'未設定'}</span></div>
+        <div className="card-row"><span className="card-row-label">勤務スタイル</span><WsBadge ws={engineer.workStyle}/></div>
+        {(engineer.conditions||[]).length>0 && (
+          <div className="card-row"><span className="card-row-label">補足条件</span><div className="tags">{engineer.conditions.map((c,i)=><span key={i} className="tag tag-warning">{c}</span>)}</div></div>
+        )}
+        {engineer.notes && <div style={{fontSize:12,color:'var(--gray-500)',lineHeight:1.6}}>{engineer.notes}</div>}
+      </div>
+    </div>
+  );
+}
+
+function EngineerListPage({ engineers, setEngineers, onToast }) {
+  const [modal, setModal] = useState({open:false,data:null});
+  const [uploadModal, setUploadModal] = useState(null);
+  const [confirm, setConfirm] = useState(null);
+  const [search, setSearch] = useState('');
+  const [clientView, setClientView] = useState(false);
+
+  const filtered = useMemo(()=>{
+    if (!search.trim()) return engineers;
+    const q = search.toLowerCase();
+    return engineers.filter(e=>e.name.toLowerCase().includes(q)||e.skills.some(s=>normSkill(s).includes(normSkill(q)))||(e.prefecture||'').includes(q)||(e.affiliation||'').toLowerCase().includes(q));
+  },[engineers,search]);
+
+  const handleSave = form => {
+    if (modal.data?.id) setEngineers(p=>p.map(e=>e.id===modal.data.id?{...e,...form,updatedAt:now()}:e));
+    else setEngineers(p=>[...p,{...form,id:uuid(),createdAt:now(),updatedAt:now()}]);
+    onToast(modal.data?.id?'要員情報を更新しました':'要員を追加しました','success');
+    setModal({open:false,data:null});
+  };
+
+  const avail = engineers.filter(e=>{if(!e.availableDate)return false;return new Date(e.availableDate)<=new Date();}).length;
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">要員管理</div>
+        <div className="page-header-right">
+          <button className={`btn ${clientView?'btn-success':'btn-outline'} btn-sm`} onClick={()=>setClientView(v=>!v)}>
+            {clientView?'👁 客先表示中':'👁 客先表示'}
+          </button>
+          <div className="search-bar">
+            <span style={{color:'var(--gray-300)'}}>🔍</span>
+            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="名前・スキル・会社で検索"/>
+            {search&&<span style={{cursor:'pointer',color:'var(--gray-300)'}} onClick={()=>setSearch('')}>✕</span>}
+          </div>
+          <button className="btn btn-primary" onClick={()=>setModal({open:true,data:null})}>＋ 要員を追加</button>
+        </div>
+      </div>
+
+      {clientView && <div className="client-view-bar">👁 客先表示モード：所属会社・希望単価は非表示</div>}
+
+      <div className="stats-row">
+        <div className="stat-card"><div className="stat-card-value">{engineers.length}</div><div className="stat-card-label">登録要員数</div></div>
+        <div className="stat-card"><div className="stat-card-value" style={{color:'var(--success)'}}>{avail}</div><div className="stat-card-label">稼働可能</div></div>
+        <div className="stat-card"><div className="stat-card-value" style={{color:'var(--warning)'}}>{engineers.length-avail}</div><div className="stat-card-label">稼働待ち</div></div>
+      </div>
+
+      {filtered.length===0 ? (
+        <div className="empty-state"><div className="empty-state-icon">{search?'🔍':'👤'}</div><div className="empty-state-title">{search?'検索結果なし':'要員が登録されていません'}</div></div>
+      ) : (
+        <div className="card-grid">
+          {filtered.map(e=><EngineerCard key={e.id} engineer={e} clientView={clientView} onEdit={eng=>setModal({open:true,data:eng})} onDelete={eng=>setConfirm(eng)} onUpload={eng=>setUploadModal(eng)}/>)}
+        </div>
+      )}
+
+      {modal.open && <EngineerFormModal initial={modal.data} onSave={handleSave} onClose={()=>setModal({open:false,data:null})}/>}
+      {uploadModal && <FileUploadModal engineerId={uploadModal.id} engineerName={uploadModal.name} onClose={()=>setUploadModal(null)} onToast={onToast}/>}
+      {confirm && <ConfirmDialog title="要員を削除しますか？" message={`「${confirm.name}」を削除します。この操作は元に戻せません。`} onConfirm={()=>{setEngineers(p=>p.filter(e=>e.id!==confirm.id));onToast('削除しました');setConfirm(null);}} onCancel={()=>setConfirm(null)}/>}
+    </div>
+  );
+}
+
+// ── PROJECT COMPONENTS ─────────────────────────────────────
+const PRJ_DEF = { projectName:'', clientName:'', requiredSkills:[], startDate:'', endDate:'', prefecture:'東京都', workStyle:'onsite', budgetMin:'', budgetMax:'', headcount:1, description:'' };
+
+function ProjectFormModal({ initial, onSave, onClose }) {
+  const [form, setForm] = useState({...PRJ_DEF,...initial});
+  const set=(k,v)=>setForm(f=>({...f,[k]:v}));
+  return (
+    <Modal title={initial?.id?'案件情報を編集':'案件を追加'} onClose={onClose} lg footer={
+      <><button className="btn btn-outline" type="button" onClick={onClose}>キャンセル</button><button className="btn btn-primary" type="submit" form="prj-form">保存する</button></>
+    }>
+      <form id="prj-form" onSubmit={e=>{e.preventDefault();if(!form.projectName.trim())return alert('案件名を入力してください');onSave(form);}}>
+        <div className="form-grid">
+          <div className="form-group"><label className="form-label">案件名<span className="req">*</span></label><input className="form-input" value={form.projectName} onChange={e=>set('projectName',e.target.value)} placeholder="ECサイトリニューアル"/></div>
+          <div className="form-group"><label className="form-label">クライアント名</label><input className="form-input" value={form.clientName} onChange={e=>set('clientName',e.target.value)} placeholder="株式会社〇〇"/></div>
+          <div className="form-group full"><label className="form-label">必須スキル</label><SkillTagInput value={form.requiredSkills} onChange={v=>set('requiredSkills',v)} placeholder="必須スキルを入力しEnterで追加"/></div>
+          <div className="form-group"><label className="form-label">開始日</label><input className="form-input" type="date" value={form.startDate} onChange={e=>set('startDate',e.target.value)}/></div>
+          <div className="form-group"><label className="form-label">終了日（予定）</label><input className="form-input" type="date" value={form.endDate} onChange={e=>set('endDate',e.target.value)}/></div>
+          <div className="form-group"><label className="form-label">都道府県</label><select className="form-select" value={form.prefecture} onChange={e=>set('prefecture',e.target.value)}>{PREFECTURES.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
+          <div className="form-group"><label className="form-label">募集人数</label><input className="form-input" type="number" min="1" max="99" value={form.headcount} onChange={e=>set('headcount',parseInt(e.target.value)||1)}/></div>
+          <div className="form-group full">
+            <label className="form-label">予算（月額）</label>
+            <div className="range-row">
+              <input className="form-input" type="number" step="10000" value={form.budgetMin} onChange={e=>set('budgetMin',parseInt(e.target.value)||'')} placeholder="下限 500000"/>
+              <span>〜</span>
+              <input className="form-input" type="number" step="10000" value={form.budgetMax} onChange={e=>set('budgetMax',parseInt(e.target.value)||'')} placeholder="上限 700000"/>
+            </div>
+            <span className="form-hint">{(form.budgetMin||form.budgetMax)?`${formatRate(form.budgetMin)} 〜 ${formatRate(form.budgetMax)}`:''}</span>
+          </div>
+          <div className="form-group full">
+            <label className="form-label">勤務スタイル</label>
+            <div className="radio-group">
+              {[['onsite','常駐'],['hybrid','ハイブリッド'],['remote','フルリモート']].map(([v,l])=>(
+                <label key={v} className="radio-option"><input type="radio" name="pws" value={v} checked={form.workStyle===v} onChange={()=>set('workStyle',v)}/>{l}</label>
+              ))}
+            </div>
+          </div>
+          <div className="form-group full"><label className="form-label">案件概要</label><textarea className="form-textarea" value={form.description} onChange={e=>set('description',e.target.value)} placeholder="案件の背景・体制・詳細など"/></div>
+        </div>
+      </form>
+    </Modal>
+  );
+}
+
+function ProjectCard({ project, onEdit, onDelete, onMatch }) {
+  const today=new Date();today.setHours(0,0,0,0);
+  const start=project.startDate?new Date(project.startDate):null;
+  const end=project.endDate?new Date(project.endDate):null;
+  let sl='募集中',sc='status-recruiting';
+  if(end&&end<today){sl='終了';sc='status-closed';}
+  else if(start&&start>today){const d=Math.round((start-today)/86400000);sl=`${d}日後開始`;sc='status-soon';}
+  return (
+    <div className="card">
+      <div className="card-header">
+        <div><div className="card-title">{project.projectName}</div><div className="card-subtitle">{project.clientName||'クライアント未設定'}</div></div>
+        <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:5}}>
+          <span className={`badge ${sc}`}>{sl}</span>
+          <div className="card-actions">
+            <button className="btn-ghost btn-sm" title="マッチング" onClick={()=>onMatch(project)}>🎯</button>
+            <button className="btn-ghost btn-sm" title="編集" onClick={()=>onEdit(project)}>✏️</button>
+            <button className="btn-ghost btn-sm" title="削除" onClick={()=>onDelete(project)}>🗑️</button>
+          </div>
+        </div>
+      </div>
+      <div className="card-body">
+        {project.requiredSkills.length>0&&<div className="tags">{project.requiredSkills.map((s,i)=><span key={i} className="tag tag-primary">{s}</span>)}</div>}
+        <div className="card-row"><span className="card-row-label">期間</span><span>{formatDate(project.startDate)} 〜 {formatDate(project.endDate)}</span></div>
+        <div className="card-row"><span className="card-row-label">予算</span><span>{formatRate(project.budgetMin)} 〜 {formatRate(project.budgetMax)}</span></div>
+        <div className="card-row"><span className="card-row-label">場所</span><span>{project.prefecture}</span></div>
+        <div className="card-row"><span className="card-row-label">勤務形態</span><WsBadge ws={project.workStyle}/></div>
+        <div className="card-row"><span className="card-row-label">募集人数</span><span>{project.headcount}名</span></div>
+        {project.description&&<div style={{fontSize:12,color:'var(--gray-500)',lineHeight:1.6}}>{project.description.length>80?project.description.slice(0,80)+'…':project.description}</div>}
+        <button className="btn btn-outline btn-sm" style={{marginTop:6,width:'100%'}} onClick={()=>onMatch(project)}>🎯 マッチングを確認</button>
+      </div>
+    </div>
+  );
+}
+
+function ProjectListPage({ projects, setProjects, onToast, onMatch }) {
+  const [modal, setModal] = useState({open:false,data:null});
+  const [confirm, setConfirm] = useState(null);
+  const [search, setSearch] = useState('');
+  const filtered = useMemo(()=>{ if(!search.trim())return projects; const q=search.toLowerCase(); return projects.filter(p=>p.projectName.toLowerCase().includes(q)||(p.clientName||'').toLowerCase().includes(q)||p.requiredSkills.some(s=>normSkill(s).includes(normSkill(q)))); },[projects,search]);
+  const handleSave = form => { if(modal.data?.id)setProjects(p=>p.map(x=>x.id===modal.data.id?{...x,...form,updatedAt:now()}:x)); else setProjects(p=>[...p,{...form,id:uuid(),createdAt:now(),updatedAt:now()}]); onToast(modal.data?.id?'案件情報を更新しました':'案件を追加しました','success'); setModal({open:false,data:null}); };
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">案件管理</div>
+        <div className="page-header-right">
+          <div className="search-bar"><span style={{color:'var(--gray-300)'}}>🔍</span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="案件名・クライアント・スキルで検索"/>{search&&<span style={{cursor:'pointer',color:'var(--gray-300)'}} onClick={()=>setSearch('')}>✕</span>}</div>
+          <button className="btn btn-primary" onClick={()=>setModal({open:true,data:null})}>＋ 案件を追加</button>
+        </div>
+      </div>
+      <div className="stats-row">
+        <div className="stat-card"><div className="stat-card-value">{projects.length}</div><div className="stat-card-label">登録案件数</div></div>
+        <div className="stat-card"><div className="stat-card-value" style={{color:'var(--success)'}}>{projects.reduce((a,p)=>a+(p.headcount||1),0)}</div><div className="stat-card-label">総募集人数</div></div>
+      </div>
+      {filtered.length===0 ? <div className="empty-state"><div className="empty-state-icon">{search?'🔍':'📋'}</div><div className="empty-state-title">{search?'検索結果なし':'案件が登録されていません'}</div></div>
+        : <div className="card-grid">{filtered.map(p=><ProjectCard key={p.id} project={p} onEdit={x=>setModal({open:true,data:x})} onDelete={x=>setConfirm(x)} onMatch={onMatch}/>)}</div>}
+      {modal.open&&<ProjectFormModal initial={modal.data} onSave={handleSave} onClose={()=>setModal({open:false,data:null})}/>}
+      {confirm&&<ConfirmDialog title="案件を削除しますか？" message={`「${confirm.projectName}」を削除します。`} onConfirm={()=>{setProjects(p=>p.filter(x=>x.id!==confirm.id));onToast('削除しました');setConfirm(null);}} onCancel={()=>setConfirm(null)}/>}
+    </div>
+  );
+}
+
+// ── MATCHING PAGE ──────────────────────────────────────────
+function MatchDetail({ engineer, project, mr, onPropose }) {
+  const advice = useMemo(()=>genAdvice(engineer,project,mr),[engineer,project,mr]);
+  return (
+    <div>
+      <div className="score-bars">
+        <ScoreBar label="スキル (40%)" score={mr.breakdown.skillScore}/>
+        <ScoreBar label="タイミング (25%)" score={mr.breakdown.timingScore}/>
+        <ScoreBar label="勤務条件 (20%)" score={mr.breakdown.locScore}/>
+        <ScoreBar label="経験・単価 (15%)" score={mr.breakdown.expScore}/>
+      </div>
+      <div style={{marginBottom:12}}>
+        {mr.matched.length>0&&<div style={{marginBottom:5}}><span style={{fontSize:12,color:'var(--gray-500)',marginRight:6}}>マッチスキル:</span>{mr.matched.map((s,i)=><span key={i} className="tag tag-success" style={{marginRight:3}}>✓ {s}</span>)}</div>}
+        {mr.missing.length>0&&<div><span style={{fontSize:12,color:'var(--gray-500)',marginRight:6}}>不足スキル:</span>{mr.missing.map((s,i)=><span key={i} className="tag tag-danger" style={{marginRight:3}}>✗ {s}</span>)}</div>}
+      </div>
+      <div style={{marginBottom:12}}>
+        <button className="btn btn-primary btn-sm" onClick={onPropose}>📝 この案件に提案する</button>
+      </div>
+      <div className="advice-box">
+        <div className="advice-title">💡 提案アドバイス</div>
+        {advice.map((s,i)=>(
+          <div key={i} className="advice-sec">
+            <div className="advice-sec-title">{s.title}</div>
+            <div className="advice-sec-body">{s.body.split('\n').map((l,j)=><span key={j}>{l}{j<s.body.split('\n').length-1&&<br/>}</span>)}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MatchingPage({ engineers, projects, initialProjectId, proposals, setProposals, onToast }) {
+  const [pid, setPid] = useState(initialProjectId||(projects[0]?.id||''));
+  const [open, setOpen] = useState({});
+
+  useEffect(()=>{ if(initialProjectId)setPid(initialProjectId); },[initialProjectId]);
+
+  const project = useMemo(()=>projects.find(p=>p.id===pid),[projects,pid]);
+  const ranked = useMemo(()=>{
+    if(!project||engineers.length===0) return [];
+    return [...engineers].map(e=>({e,mr:calcMatch(e,project)})).sort((a,b)=>b.mr.total-a.mr.total);
+  },[engineers,project]);
+
+  const handlePropose = (engineer) => {
+    const exists = proposals.find(p=>p.engineerId===engineer.id&&p.projectId===pid);
+    if (exists) { onToast('既にこの案件への提案が登録されています','danger'); return; }
+    setProposals(p=>[...p,{ id:uuid(), engineerId:engineer.id, projectId:pid, status:'提案中', proposedAt:now(), memo:'', updatedAt:now() }]);
+    onToast(`${engineer.name}を「${project.projectName}」に提案登録しました`,'success');
+  };
+
+  return (
+    <div>
+      <div className="page-header"><div className="page-title">マッチング</div></div>
+      <div className="matching-selector">
+        <label>案件を選択:</label>
+        <select value={pid} onChange={e=>setPid(e.target.value)}>
+          <option value="">-- 案件を選択してください --</option>
+          {projects.map(p=><option key={p.id} value={p.id}>{p.projectName}（{p.clientName||'クライアント未設定'}）</option>)}
+        </select>
+      </div>
+      {!project ? (
+        <div className="empty-state"><div className="empty-state-icon">🎯</div><div className="empty-state-title">案件を選択してください</div></div>
+      ) : (
+        <>
+          <div className="project-detail-box">
+            <div className="project-detail-title">📋 {project.projectName} — {project.clientName}</div>
+            <div className="project-detail-grid">
+              <div><div className="pdi-label">必須スキル</div><div className="tags" style={{marginTop:3}}>{(project.requiredSkills||[]).map((s,i)=><span key={i} className="tag tag-primary" style={{fontSize:11}}>{s}</span>)}</div></div>
+              <div><div className="pdi-label">期間</div><div className="pdi-value">{formatDate(project.startDate)} 〜</div></div>
+              <div><div className="pdi-label">場所・形態</div><div className="pdi-value">{project.prefecture} / <WsBadge ws={project.workStyle}/></div></div>
+              <div><div className="pdi-label">予算</div><div className="pdi-value">{formatRate(project.budgetMin)} 〜 {formatRate(project.budgetMax)}</div></div>
+            </div>
+          </div>
+          {engineers.length===0 ? <div className="empty-state"><div className="empty-state-icon">👤</div><div className="empty-state-title">要員が登録されていません</div></div> : (
+            <>
+              <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12,flexWrap:'wrap'}}>
+                <span style={{fontWeight:700,color:'var(--gray-700)'}}>マッチング結果 ({ranked.length}名)</span>
+                {[['最適候補','score-ideal'],['有力候補','score-strong'],['検討候補','score-consider'],['要確認','score-review']].map(([l,c])=><span key={l} className={`badge ${c}`}>{l}</span>)}
+              </div>
+              {ranked.map(({e,mr},i)=>{
+                const {label,cls,cirCls}=scoreLabel(mr.total);
+                const status=getEngineerStatus(e.availableDate);
+                const isOpen=open[e.id];
+                return (
+                  <div key={e.id} className="match-card">
+                    <div className="match-card-head" onClick={()=>setOpen(o=>({...o,[e.id]:!o[e.id]}))}>
+                      <div style={{color:'var(--gray-300)',fontSize:13,fontWeight:700,width:18,textAlign:'center',flexShrink:0}}>{i+1}</div>
+                      <div className={`score-circle ${cirCls}`}>{mr.total}<small>点</small></div>
+                      <div className="match-info">
+                        <div className="match-name">{e.name}</div>
+                        <div className="match-meta">{e.experienceYears?`経験${e.experienceYears}年`:'経験不明'} · {e.prefecture} · {formatRate(e.desiredRate)}</div>
+                        <div className="match-skill-row">
+                          {mr.matched.slice(0,4).map((s,j)=><span key={j} className="tag tag-success" style={{fontSize:10,padding:'1px 5px'}}>✓{s}</span>)}
+                          {mr.missing.slice(0,3).map((s,j)=><span key={j} className="tag tag-danger" style={{fontSize:10,padding:'1px 5px'}}>✗{s}</span>)}
+                        </div>
+                      </div>
+                      <div className="match-right">
+                        <span className={`badge ${cls}`}>{label}</span>
+                        <span className={`badge ${status.cls}`}>{status.label}</span>
+                        <WsBadge ws={e.workStyle}/>
+                        <span style={{color:'var(--gray-400)',fontSize:16,transition:'transform 0.2s',transform:isOpen?'rotate(180deg)':''}}>▾</span>
+                      </div>
+                    </div>
+                    <div className={`match-body ${isOpen?'open':''}`}>
+                      <MatchDetail engineer={e} project={project} mr={mr} onPropose={()=>handlePropose(e)}/>
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ── EMAIL GENERATION ───────────────────────────────────────
+const EMAIL_TYPES = [
+  { id:'propose', label:'📨 クライアントへの提案メール' },
+  { id:'interview', label:'📅 面談調整メール' },
+  { id:'toEngineer', label:'💼 要員への案件紹介メール' },
+];
+
+function genEmail(type, engineer, project) {
+  const e = engineer || {};
+  const p = project || {};
+  const eName = e.name || '（要員名）';
+  const pName = p.projectName || '（案件名）';
+  const clientName = p.clientName || '（クライアント名）';
+  const skills = (e.skills||[]).join('・') || '（スキル）';
+  const avail = formatDate(e.availableDate);
+  const ws = WS_LABELS[e.workStyle] || e.workStyle || '';
+  const station = e.nearestStation || '';
+  const yrs = e.experienceYears ? `${e.experienceYears}年` : '（経験年数）';
+  const pStart = formatDate(p.startDate);
+  const pEnd = formatDate(p.endDate);
+  const pPref = p.prefecture || '';
+  const pWs = WS_LABELS[p.workStyle] || '';
+  const pBudget = (p.budgetMin || p.budgetMax) ? `${formatRate(p.budgetMin)} 〜 ${formatRate(p.budgetMax)}` : '要相談';
+  const reqSkills = (p.requiredSkills||[]).join('・') || '（スキル）';
+  const spText = (e.skillProjects||[]).filter(sp=>sp.skill&&sp.from).map(sp=>{
+    const m = calcMonths(sp.from, sp.to);
+    return `  ・${sp.skill}：${monthsToText(m)||'経験あり'}（${sp.from}〜${sp.to||'現在'}）`;
+  }).join('\n') || '  （詳細はスキルシートをご参照ください）';
+  const conds = (e.conditions||[]).join('・');
+
+  if (type === 'propose') return `件名：【ご提案】${pName}への要員ご紹介
+
+${clientName} ご担当者様
+
+お世話になっております。
+${pName}の件につきまして、適任と思われる要員をご紹介させていただきます。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+■ 要員概要
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+・経験年数　　：${yrs}
+・主要スキル　：${skills}
+・稼働可能日　：${avail}
+・就業形態希望：${ws}
+・最寄り駅　　：${station}
+${conds ? `・補足条件　　：${conds}\n` : ''}
+■ スキル経験詳細
+${spText}
+${e.notes ? `\n■ 備考\n${e.notes}\n` : ''}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ご興味がございましたら、ぜひ面談のお時間をいただければ幸いです。
+スキルシートも合わせてご送付いたします。
+
+ご検討のほど、よろしくお願いいたします。`;
+
+  if (type === 'interview') return `件名：【面談日程調整のお願い】${pName} × ${eName}様
+
+${clientName} ご担当者様
+
+お世話になっております。
+先日ご提案させていただきました ${eName} 様について、
+ぜひ一度面談のお時間をいただけますでしょうか。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+■ 面談候補日程（ご都合のよい日時をお選びください）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+・第１希望：　　年　　月　　日（　）　　：　　〜
+・第２希望：　　年　　月　　日（　）　　：　　〜
+・第３希望：　　年　　月　　日（　）　　：　　〜
+
+■ 面談形式
+□ オンライン（Zoom / Teams / Google Meet）
+□ 対面（${pPref}）
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ご多忙のところ恐れ入りますが、
+ご確認のほどよろしくお願いいたします。`;
+
+  if (type === 'toEngineer') return `件名：【案件ご紹介】${pName}
+
+${eName} 様
+
+お疲れ様です。
+以下の案件をご紹介させていただきたくご連絡いたします。
+ご興味・ご都合をお聞かせいただければ幸いです。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+■ 案件概要
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+・案件名　　：${pName}
+・クライアント：${clientName}
+・開始日　　：${pStart}
+・終了予定　：${pEnd}
+・場所　　　：${pPref}
+・勤務形態　：${pWs}
+・予算　　　：${pBudget}
+・必須スキル：${reqSkills}
+${p.description ? `\n・概要\n${p.description}\n` : ''}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ご経験・ご希望に合うようでしたら、
+お気軽にご返信ください。
+
+よろしくお願いいたします。`;
+
+  return '';
+}
+
+function EmailGenModal({ engineer, project, onClose }) {
+  const [type, setType] = useState('propose');
+  const [body, setBody] = useState(() => genEmail('propose', engineer, project));
+  const [copied, setCopied] = useState(false);
+  const textRef = useRef(null);
+
+  const changeType = t => { setType(t); setBody(genEmail(t, engineer, project)); setCopied(false); };
+
+  const copyToClipboard = () => {
+    if (textRef.current) {
+      textRef.current.select();
+      try {
+        document.execCommand('copy');
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch {
+        navigator.clipboard?.writeText(body).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
+      }
+    }
+  };
+
+  return (
+    <Modal title="📧 メール文面を生成" onClose={onClose} lg footer={
+      <>
+        <button className={`btn ${copied ? 'btn-success' : 'btn-primary'}`} onClick={copyToClipboard}>
+          {copied ? '✓ コピーしました' : '📋 クリップボードにコピー'}
+        </button>
+        <button className="btn btn-outline" onClick={onClose}>閉じる</button>
+      </>
+    }>
+      <div style={{marginBottom:12}}>
+        <div style={{fontSize:12,fontWeight:600,color:'var(--gray-600)',marginBottom:6}}>テンプレートを選択</div>
+        <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+          {EMAIL_TYPES.map(t=>(
+            <button key={t.id} type="button"
+              className={`btn btn-sm ${type===t.id ? 'btn-primary' : 'btn-outline'}`}
+              onClick={()=>changeType(t.id)}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div style={{fontSize:12,color:'var(--gray-500)',marginBottom:6}}>
+        内容は自由に編集できます。コピーしてメールに貼り付けてください。
+      </div>
+      <textarea
+        ref={textRef}
+        style={{width:'100%',minHeight:380,padding:'10px 12px',border:'1.5px solid var(--gray-200)',borderRadius:6,fontSize:13,fontFamily:'var(--font)',lineHeight:1.8,resize:'vertical',outline:'none'}}
+        value={body}
+        onChange={e=>setBody(e.target.value)}
+      />
+    </Modal>
+  );
+}
+
+// ── INTERVIEW MODAL ────────────────────────────────────────
+const INTERVIEW_DEF = { date:'', startTime:'', endTime:'', format:'オンライン', location:'', notes:'' };
+
+function InterviewModal({ proposal, engineer, project, onSave, onClose }) {
+  const [form, setForm] = useState({ ...INTERVIEW_DEF, ...(proposal.interview||{}) });
+  const set = (k,v) => setForm(f=>({...f,[k]:v}));
+
+  const dateStr = form.date ? (() => {
+    const d = new Date(form.date);
+    const days = ['日','月','火','水','木','金','土'];
+    return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${days[d.getDay()]}）`;
+  })() : '';
+
+  return (
+    <Modal title="📅 面談情報を設定" onClose={onClose} footer={
+      <>
+        <button className="btn btn-outline" onClick={onClose}>キャンセル</button>
+        <button className="btn btn-primary" onClick={()=>onSave(form)}>保存する</button>
+      </>
+    }>
+      <div style={{background:'var(--primary-light)',borderRadius:6,padding:'10px 14px',marginBottom:16,fontSize:13}}>
+        <strong>{engineer?.name||'—'}</strong> × <strong>{project?.projectName||'—'}</strong>
+        {project?.clientName && <span style={{color:'var(--gray-500)',marginLeft:6}}>（{project.clientName}）</span>}
+      </div>
+      <div className="form-grid">
+        <div className="form-group">
+          <label className="form-label">面談日<span className="req">*</span></label>
+          <input className="form-input" type="date" value={form.date} onChange={e=>set('date',e.target.value)}/>
+          {dateStr && <span className="form-hint">{dateStr}</span>}
+        </div>
+        <div className="form-group">
+          <label className="form-label">形式</label>
+          <div className="radio-group">
+            {['オンライン','対面','ハイブリッド'].map(v=>(
+              <label key={v} className="radio-option">
+                <input type="radio" name="ivformat" value={v} checked={form.format===v} onChange={()=>set('format',v)}/>{v}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div className="form-group">
+          <label className="form-label">開始時間</label>
+          <input className="form-input" type="time" value={form.startTime} onChange={e=>set('startTime',e.target.value)}/>
+        </div>
+        <div className="form-group">
+          <label className="form-label">終了時間（予定）</label>
+          <input className="form-input" type="time" value={form.endTime} onChange={e=>set('endTime',e.target.value)}/>
+        </div>
+        <div className="form-group full">
+          <label className="form-label">
+            {form.format==='オンライン' ? '接続URL / ミーティングID' : '集合場所・住所'}
+          </label>
+          <input className="form-input" value={form.location} onChange={e=>set('location',e.target.value)}
+            placeholder={form.format==='オンライン'
+              ? '例: https://zoom.us/j/xxxxx / Teams リンク'
+              : '例: 東京都千代田区〇〇1-2-3 〇〇ビル 5F 受付'}
+          />
+        </div>
+        <div className="form-group full">
+          <label className="form-label">備考・注意事項</label>
+          <textarea className="form-textarea" value={form.notes} onChange={e=>set('notes',e.target.value)}
+            placeholder="持ち物、ドレスコード、担当者名、事前準備など"/>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+// ── PROPOSALS PAGE ─────────────────────────────────────────
+function ProposalsPage({ proposals, setProposals, engineers, projects, onToast }) {
+  const [filter, setFilter] = useState('');
+  const [editMemo, setEditMemo] = useState(null);
+  const [emailModal, setEmailModal] = useState(null);
+  const [interviewModal, setInterviewModal] = useState(null); // proposal row
+
+  const rows = useMemo(()=>{
+    return proposals.map(p=>({
+      ...p,
+      engineer: engineers.find(e=>e.id===p.engineerId),
+      project: projects.find(x=>x.id===p.projectId),
+    })).filter(r=>!filter||r.status===filter)
+      .sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
+  },[proposals,engineers,projects,filter]);
+
+  const updateStatus = (id, status, row) => {
+    setProposals(p=>p.map(x=>x.id===id?{...x,status,updatedAt:now()}:x));
+    onToast(`ステータスを「${status}」に更新しました`,'success');
+    // 面談設定に変更したとき自動で面談モーダルを開く
+    if (status==='面談設定') setInterviewModal(row);
+  };
+  const updateMemo = (id, memo) => {
+    setProposals(p=>p.map(x=>x.id===id?{...x,memo,updatedAt:now()}:x));
+    setEditMemo(null);
+    onToast('メモを保存しました','success');
+  };
+  const saveInterview = (id, interviewData) => {
+    setProposals(p=>p.map(x=>x.id===id?{...x,interview:interviewData,status:'面談設定',updatedAt:now()}:x));
+    setInterviewModal(null);
+    onToast('面談情報を保存しました','success');
+  };
+  const deleteProposal = id => {
+    setProposals(p=>p.filter(x=>x.id!==id));
+    onToast('提案を削除しました');
+  };
+
+  const counts = PROPOSAL_STATUSES.reduce((acc,s)=>({...acc,[s]:proposals.filter(p=>p.status===s).length}),{});
+
+  // 今後7日以内の面談を抽出
+  const upcomingInterviews = useMemo(()=>{
+    const today = new Date(); today.setHours(0,0,0,0);
+    const week = new Date(today); week.setDate(week.getDate()+7);
+    return rows.filter(r=>{
+      if (!r.interview?.date) return false;
+      const d = new Date(r.interview.date); d.setHours(0,0,0,0);
+      return d >= today && d <= week;
+    }).sort((a,b)=>new Date(a.interview.date)-new Date(b.interview.date));
+  },[rows]);
+
+  const formatTime = (t) => t ? t.slice(0,5) : '';
+  const ivSummary = (iv) => {
+    if (!iv?.date) return null;
+    const d = new Date(iv.date);
+    const days = ['日','月','火','水','木','金','土'];
+    const dateStr = `${d.getMonth()+1}/${d.getDate()}（${days[d.getDay()]}）`;
+    const timeStr = iv.startTime ? `${formatTime(iv.startTime)}${iv.endTime?`〜${formatTime(iv.endTime)}`:''}` : '';
+    return `${dateStr} ${timeStr}`.trim();
+  };
+
+  return (
+    <div>
+      <div className="page-header"><div className="page-title">提案・進捗管理</div></div>
+
+      {/* 直近7日の面談アラート */}
+      {upcomingInterviews.length > 0 && (
+        <div style={{background:'#FEF3C7',border:'1px solid #F59E0B',borderRadius:8,padding:'12px 16px',marginBottom:16}}>
+          <div style={{fontWeight:700,color:'#92400E',marginBottom:8,fontSize:13}}>📅 直近7日以内の面談（{upcomingInterviews.length}件）</div>
+          {upcomingInterviews.map(r=>(
+            <div key={r.id} style={{fontSize:13,color:'#78350F',display:'flex',gap:12,alignItems:'center',marginBottom:4,flexWrap:'wrap'}}>
+              <span style={{fontWeight:600}}>{ivSummary(r.interview)}</span>
+              <span>{r.engineer?.name||'—'}</span>
+              <span style={{color:'#92400E'}}>×</span>
+              <span>{r.project?.projectName||'—'}</span>
+              <span className={`badge ${r.interview.format==='オンライン'?'tag-info':'tag-warning'}`}>{r.interview.format}</span>
+              {r.interview.location && <span style={{fontSize:12,color:'#92400E'}}>📍 {r.interview.location}</span>}
+              <button className="btn btn-outline btn-xs" onClick={()=>setInterviewModal(r)}>詳細</button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="stats-row">
+        {PROPOSAL_STATUSES.map(s=>(
+          <div key={s} className="stat-card" style={{cursor:'pointer',outline:filter===s?'2px solid var(--primary)':''}} onClick={()=>setFilter(f=>f===s?'':s)}>
+            <div className="stat-card-value" style={{fontSize:20}}>{counts[s]||0}</div>
+            <div className="stat-card-label"><span className={`status-badge ps-${s}`}>{s}</span></div>
+          </div>
+        ))}
+      </div>
+
+      {filter && <div style={{marginBottom:12,fontSize:13}}><span className={`status-badge ps-${filter}`}>{filter}</span> でフィルター中 <button className="btn-ghost btn-xs" onClick={()=>setFilter('')}>解除</button></div>}
+
+      {rows.length===0 ? (
+        <div className="empty-state"><div className="empty-state-icon">📝</div><div className="empty-state-title">提案履歴がありません</div><div style={{fontSize:13,color:'var(--gray-400)'}}>マッチング画面から「提案する」ボタンで追加できます</div></div>
+      ) : (
+        <div style={{overflowX:'auto'}}>
+          <table className="proposal-table">
+            <thead>
+              <tr>
+                <th>要員</th><th>案件</th><th>ステータス</th><th>面談日時</th><th>提案日</th><th>メモ</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map(r=>{
+                const iv = r.interview;
+                const hasIv = iv?.date;
+                return (
+                  <tr key={r.id}>
+                    <td>
+                      <strong>{r.engineer?.name||'削除済み'}</strong><br/>
+                      <span style={{fontSize:11,color:'var(--gray-400)'}}>{r.engineer?.affiliation||''}</span>
+                    </td>
+                    <td>
+                      <strong>{r.project?.projectName||'削除済み'}</strong><br/>
+                      <span style={{fontSize:11,color:'var(--gray-400)'}}>{r.project?.clientName||''}</span>
+                    </td>
+                    <td>
+                      <select className={`status-badge ps-${r.status}`}
+                        style={{border:'none',cursor:'pointer',fontFamily:'var(--font)',fontWeight:600,fontSize:11}}
+                        value={r.status}
+                        onChange={e=>updateStatus(r.id,e.target.value,r)}>
+                        {PROPOSAL_STATUSES.map(s=><option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </td>
+                    <td>
+                      {hasIv ? (
+                        <div style={{cursor:'pointer'}} onClick={()=>setInterviewModal(r)}>
+                          <div style={{fontSize:13,fontWeight:600,color:'var(--gray-700)'}}>{ivSummary(iv)}</div>
+                          <div style={{fontSize:11,color:'var(--gray-400)',marginTop:2}}>
+                            <span className={`badge ${iv.format==='オンライン'?'tag-info':'tag-warning'}`} style={{fontSize:10}}>{iv.format}</span>
+                            {iv.location && <span style={{marginLeft:4}}>📍 {iv.location.length>20?iv.location.slice(0,20)+'…':iv.location}</span>}
+                          </div>
+                        </div>
+                      ) : (
+                        <button className="btn btn-outline btn-xs" onClick={()=>setInterviewModal(r)}>
+                          📅 設定する
+                        </button>
+                      )}
+                    </td>
+                    <td style={{fontSize:12,color:'var(--gray-500)'}}>{formatDate(r.proposedAt)}</td>
+                    <td style={{maxWidth:180}}>
+                      {editMemo?.id===r.id ? (
+                        <div style={{display:'flex',gap:4}}>
+                          <input style={{flex:1,padding:'4px 6px',border:'1.5px solid var(--primary)',borderRadius:4,fontSize:12,fontFamily:'var(--font)'}} value={editMemo.memo} onChange={e=>setEditMemo(m=>({...m,memo:e.target.value}))} onKeyDown={e=>{if(e.key==='Enter')updateMemo(r.id,editMemo.memo);if(e.key==='Escape')setEditMemo(null);}} autoFocus/>
+                          <button className="btn btn-primary btn-xs" onClick={()=>updateMemo(r.id,editMemo.memo)}>保存</button>
+                        </div>
+                      ) : (
+                        <span style={{fontSize:12,color:r.memo?'var(--gray-700)':'var(--gray-300)',cursor:'pointer'}} onClick={()=>setEditMemo({id:r.id,memo:r.memo||''})}>
+                          {r.memo||'メモを追加…'}
+                        </span>
+                      )}
+                    </td>
+                    <td style={{display:'flex',gap:4,alignItems:'center'}}>
+                      <button className="btn btn-outline btn-xs" title="メール文面生成" onClick={()=>setEmailModal({engineer:r.engineer,project:r.project})}>📧</button>
+                      <button className="btn-ghost btn-xs" onClick={()=>deleteProposal(r.id)}>🗑️</button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {emailModal && (
+        <EmailGenModal engineer={emailModal.engineer} project={emailModal.project} onClose={()=>setEmailModal(null)}/>
+      )}
+      {interviewModal && (
+        <InterviewModal
+          proposal={interviewModal}
+          engineer={interviewModal.engineer}
+          project={interviewModal.project}
+          onSave={(data)=>saveInterview(interviewModal.id, data)}
+          onClose={()=>setInterviewModal(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+// ── TOAST ──────────────────────────────────────────────────
+function Toasts({ toasts }) {
+  return <div className="toast-container">{toasts.map(t=><div key={t.id} className={`toast ${t.type==='success'?'toast-success':t.type==='danger'?'toast-danger':''}`}>{t.type==='success'?'✓':t.type==='danger'?'✕':'ℹ'} {t.message}</div>)}</div>;
+}
+
+// ── APP ────────────────────────────────────────────────────
+function App() {
+  const [engineers, setEngineers] = useLS('ses_eng', null);
+  const [projects, setProjects] = useLS('ses_prj', null);
+  const [proposals, setProposals] = useLS('ses_prop', []);
+  const [tab, setTab] = useState('matching');
+  const [matchPid, setMatchPid] = useState('');
+  const [toasts, setToasts] = useState([]);
+
+  useEffect(()=>{ if(engineers===null)setEngineers(SAMPLE_ENGINEERS); if(projects===null)setProjects(SAMPLE_PROJECTS); },[]);
+
+  const engs = engineers||[], prjs = projects||[];
+
+  const toast = useCallback((msg, type='default')=>{ const id=uuid(); setToasts(t=>[...t,{id,msg:msg,message:msg,type}]); setTimeout(()=>setToasts(t=>t.filter(x=>x.id!==id)),3000); },[]);
+
+  const handleMatchFromProject = useCallback(p=>{ setMatchPid(p.id); setTab('matching'); },[]);
+
+  const TABS = [['engineers','👤 要員'],['projects','📋 案件'],['matching','🎯 マッチング'],['proposals','📝 提案管理']];
+
+  return (
+    <div>
+      <nav className="topnav">
+        <div className="topnav-logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>SES営業管理システム</span>
+        </div>
+        <div className="topnav-tabs">
+          {TABS.map(([t,l])=><button key={t} className={`topnav-tab ${tab===t?'active':''}`} onClick={()=>setTab(t)}>{l}</button>)}
+        </div>
+      </nav>
+      <main className="main">
+        {tab==='engineers'&&<EngineerListPage engineers={engs} setEngineers={setEngineers} onToast={toast}/>}
+        {tab==='projects'&&<ProjectListPage projects={prjs} setProjects={setProjects} onToast={toast} onMatch={handleMatchFromProject}/>}
+        {tab==='matching'&&<MatchingPage engineers={engs} projects={prjs} initialProjectId={matchPid} proposals={proposals} setProposals={setProposals} onToast={toast}/>}
+        {tab==='proposals'&&<ProposalsPage proposals={proposals} setProposals={setProposals} engineers={engs} projects={prjs} onToast={toast}/>}
+      </main>
+      <Toasts toasts={toasts}/>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
