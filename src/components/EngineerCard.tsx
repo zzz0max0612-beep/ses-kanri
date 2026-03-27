@@ -36,9 +36,15 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
   const [showSummary, setShowSummary] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  const handleOpenFile = (sheet: SkillSheet) => {
-    const { data } = supabase.storage.from(BUCKET).getPublicUrl(sheet.storage_path)
-    window.open(data.publicUrl, '_blank')
+  const handleOpenFile = async (sheet: SkillSheet) => {
+    const { data, error } = await supabase.storage.from(BUCKET).download(sheet.storage_path)
+    if (error || !data) return
+    const url = URL.createObjectURL(data)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = sheet.file_name
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   const summary = generateSummary(engineer)
