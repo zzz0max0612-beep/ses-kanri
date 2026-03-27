@@ -43,6 +43,6 @@ export async function cleanFileMetadata(file: File): Promise<File> {
     file.name.toLowerCase().endsWith('.xls')
 
   if (isPdf) return cleanPdfMetadata(file)
-  if (isExcel) return cleanExcelMetadata(file)
+  // Excelはライブラリの変換でファイル内容が変わるためそのまま返す
   return file
 }
