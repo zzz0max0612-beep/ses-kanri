@@ -66,20 +66,20 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
     : 'bg-gray-100 text-gray-500'
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 flex flex-col gap-2">
+    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 flex flex-col gap-2">
       {/* ヘッダー */}
       <div className="flex justify-between items-start">
         <div>
-          <h2 className="text-lg font-bold">
+          <h2 className="text-lg font-bold text-white">
             {engineer.name}
-            {engineer.age && <span className="text-sm font-normal text-gray-500 ml-2">{engineer.age}歳</span>}
-            {engineer.gender && <span className="text-sm font-normal text-gray-500 ml-1">{engineer.gender}</span>}
+            {engineer.age && <span className="text-sm font-normal text-gray-400 ml-2">{engineer.age}歳</span>}
+            {engineer.gender && <span className="text-sm font-normal text-gray-400 ml-1">{engineer.gender}</span>}
           </h2>
           {engineer.source_company && (
-            <p className="text-sm text-gray-500">所属会社: {engineer.source_company}</p>
+            <p className="text-sm text-gray-400">所属会社: {engineer.source_company}</p>
           )}
           {engineer.affiliation && (
-            <p className="text-sm text-gray-500">{engineer.affiliation}</p>
+            <p className="text-sm text-gray-400">{engineer.affiliation}</p>
           )}
         </div>
         <div className="flex flex-col items-end gap-1">
@@ -115,16 +115,16 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
 
       {/* 工程 */}
       {engineer.processes.length > 0 && (
-        <p className="text-xs text-gray-500">工程: {engineer.processes.join('　')}</p>
+        <p className="text-xs text-gray-400">工程: {engineer.processes.join('　')}</p>
       )}
 
       {/* 資格 */}
       {engineer.certifications.length > 0 && (
-        <p className="text-xs text-gray-500">資格: {engineer.certifications.join('、')}</p>
+        <p className="text-xs text-gray-400">資格: {engineer.certifications.join('、')}</p>
       )}
 
       {/* 稼働情報 */}
-      <div className="text-sm text-gray-600 flex flex-col gap-0.5">
+      <div className="text-sm text-gray-300 flex flex-col gap-0.5">
         {engineer.available_date && <p>稼働可能日: {engineer.available_date}</p>}
         {(engineer.prefecture || engineer.nearest_station) && (
           <p>勤務地: {[engineer.prefecture, engineer.nearest_station].filter(Boolean).join(' / ')}</p>
@@ -135,15 +135,15 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
 
       {/* 備考 */}
       {engineer.notes && (
-        <p className="text-sm text-gray-500 border-t pt-2 whitespace-pre-wrap line-clamp-3">
+        <p className="text-sm text-gray-400 border-t border-gray-700 pt-2 whitespace-pre-wrap line-clamp-3">
           {engineer.notes}
         </p>
       )}
 
       {/* スキルシート */}
       {skillSheets.length > 0 && (
-        <div className="border-t pt-2">
-          <p className="text-xs font-medium text-gray-500 mb-1">スキルシート</p>
+        <div className="border-t border-gray-700 pt-2">
+          <p className="text-xs font-medium text-gray-400 mb-1">スキルシート</p>
           <div className="flex flex-col gap-1">
             {skillSheets.map((sheet) => (
               <button
@@ -160,8 +160,8 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
 
       {/* サマリー表示 */}
       {showSummary && (
-        <div className="border-t pt-2">
-          <pre className="text-xs bg-gray-50 rounded p-2 whitespace-pre-wrap break-all text-gray-900">
+        <div className="border-t border-gray-700 pt-2">
+          <pre className="text-xs bg-gray-900 rounded p-2 whitespace-pre-wrap break-all text-gray-300">
             {summary}
           </pre>
           <button onClick={handleCopy} className="mt-1 text-xs text-blue-600 hover:text-blue-800">
@@ -170,7 +170,7 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
         </div>
       )}
 
-      <div className="flex justify-between items-center border-t pt-2">
+      <div className="flex justify-between items-center border-t border-gray-700 pt-2">
         <button
           onClick={() => setShowSummary((v) => !v)}
           className="text-sm text-blue-500 hover:text-blue-700"
@@ -180,7 +180,7 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
         <div className="flex gap-3">
           <button
             onClick={() => router.push(`/engineers/${engineer.id}/edit`)}
-            className="text-sm text-gray-500 hover:text-gray-700"
+            className="text-sm text-gray-400 hover:text-gray-300"
           >
             編集
           </button>

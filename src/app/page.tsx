@@ -20,24 +20,21 @@ const menuCards = [
     title: '要員管理',
     description: '要員の登録・スキル管理・稼働状況の確認',
     icon: '👤',
-    color: 'border-blue-200 hover:border-blue-400 hover:bg-blue-50',
-    addHref: '/engineers/new',
+    gradient: 'from-blue-400 to-blue-600',
   },
   {
     href: '/projects',
     title: '案件管理',
     description: '案件の登録・条件管理・ステータスの追跡',
     icon: '📋',
-    color: 'border-green-200 hover:border-green-400 hover:bg-green-50',
-    addHref: '/projects/new',
+    gradient: 'from-emerald-400 to-emerald-600',
   },
   {
     href: '/proposals',
     title: '提案管理',
     description: '要員と案件のマッチング・提案ステータスの管理',
     icon: '🤝',
-    color: 'border-purple-200 hover:border-purple-400 hover:bg-purple-50',
-    addHref: '/proposals/new',
+    gradient: 'from-violet-400 to-violet-600',
   },
 ]
 
@@ -81,65 +78,69 @@ export default function HomePage() {
   }, [])
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-10">
-      {/* タイトル */}
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold text-gray-800">SES営業管理システム</h1>
-        <p className="text-gray-500 mt-1">要員・案件・提案をひとまとめに管理します</p>
-      </div>
+    <div className="min-h-screen bg-gray-900">
+      <main className="max-w-5xl mx-auto px-4 py-8">
+        {/* タイトル */}
+        <div className="mb-6">
+          <h1 className="text-xl font-bold text-white">ダッシュボード</h1>
+          <p className="text-sm text-gray-400 mt-0.5">要員・案件・提案の状況を確認できます</p>
+        </div>
 
-      {/* サマリーカード */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
-        <div className="bg-white rounded-xl shadow-sm border p-4 col-span-1">
-          <p className="text-xs text-gray-400 mb-1">要員数</p>
-          <p className="text-3xl font-bold text-gray-800">{stats.engineers}</p>
-          <p className="text-xs text-blue-500 mt-1">営業中 {stats.activeEngineers}名</p>
-        </div>
-        <div className="bg-white rounded-xl shadow-sm border p-4 col-span-1">
-          <p className="text-xs text-gray-400 mb-1">案件数</p>
-          <p className="text-3xl font-bold text-gray-800">{stats.projects}</p>
-          <p className="text-xs text-green-500 mt-1">営業中 {stats.activeProjects}件</p>
-        </div>
-        <div className="bg-white rounded-xl shadow-sm border p-4 col-span-1">
-          <p className="text-xs text-gray-400 mb-1">提案数</p>
-          <p className="text-3xl font-bold text-gray-800">{stats.proposals}</p>
-        </div>
-        <div className="bg-white rounded-xl shadow-sm border p-4 col-span-2 md:col-span-2 flex flex-col justify-center">
-          <p className="text-xs text-gray-400 mb-2">クイックアクション</p>
-          <div className="flex flex-wrap gap-2">
-            <Link href="/engineers/new"
-              className="text-xs bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700">
-              ＋ 要員追加
-            </Link>
-            <Link href="/projects/new"
-              className="text-xs bg-green-600 text-white px-3 py-1.5 rounded hover:bg-green-700">
-              ＋ 案件追加
-            </Link>
-            <Link href="/proposals/new"
-              className="text-xs bg-purple-600 text-white px-3 py-1.5 rounded hover:bg-purple-700">
-              ＋ 提案追加
-            </Link>
+        {/* サマリーカード */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+          <div className="bg-gray-800 rounded-xl border border-gray-700 p-5">
+            <p className="text-xs text-gray-400 mb-2">要員数</p>
+            <p className="text-3xl font-bold text-white">{stats.engineers}</p>
+            <p className="text-xs text-blue-400 mt-1">営業中 {stats.activeEngineers}名</p>
+          </div>
+          <div className="bg-gray-800 rounded-xl border border-gray-700 p-5">
+            <p className="text-xs text-gray-400 mb-2">案件数</p>
+            <p className="text-3xl font-bold text-white">{stats.projects}</p>
+            <p className="text-xs text-emerald-400 mt-1">営業中 {stats.activeProjects}件</p>
+          </div>
+          <div className="bg-gray-800 rounded-xl border border-gray-700 p-5">
+            <p className="text-xs text-gray-400 mb-2">提案数</p>
+            <p className="text-3xl font-bold text-white">{stats.proposals}</p>
+          </div>
+          <div className="bg-gray-800 rounded-xl border border-gray-700 p-5 flex flex-col justify-center">
+            <p className="text-xs text-gray-400 mb-3">クイックアクション</p>
+            <div className="flex flex-col gap-1.5">
+              <Link href="/engineers/new"
+                className="text-xs bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 text-center transition-colors">
+                ＋ 要員追加
+              </Link>
+              <Link href="/projects/new"
+                className="text-xs bg-emerald-500 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-600 text-center transition-colors">
+                ＋ 案件追加
+              </Link>
+              <Link href="/proposals/new"
+                className="text-xs bg-violet-500 text-white px-3 py-1.5 rounded-lg hover:bg-violet-600 text-center transition-colors">
+                ＋ 提案追加
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* メニューカード */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {menuCards.map((card) => (
-          <Link
-            key={card.href}
-            href={card.href}
-            className={`bg-white rounded-xl shadow-sm border-2 p-6 flex flex-col gap-3 transition-all ${card.color}`}
-          >
-            <div className="text-3xl">{card.icon}</div>
-            <div>
-              <h2 className="text-lg font-bold text-gray-800">{card.title}</h2>
-              <p className="text-sm text-gray-500 mt-1">{card.description}</p>
-            </div>
-            <span className="text-xs text-gray-400 mt-auto">一覧を見る →</span>
-          </Link>
-        ))}
-      </div>
-    </main>
+        {/* メニューカード */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {menuCards.map((card) => (
+            <Link
+              key={card.href}
+              href={card.href}
+              className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden hover:border-gray-500 transition-all group"
+            >
+              <div className={`bg-gradient-to-br ${card.gradient} h-24 flex items-center justify-center text-4xl`}>
+                {card.icon}
+              </div>
+              <div className="p-5">
+                <h2 className="text-sm font-semibold text-white">{card.title}</h2>
+                <p className="text-xs text-gray-400 mt-1">{card.description}</p>
+                <span className="text-xs text-gray-500 mt-3 block group-hover:text-blue-400 transition-colors">一覧を見る →</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </main>
+    </div>
   )
 }

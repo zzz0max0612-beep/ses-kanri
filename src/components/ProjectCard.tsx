@@ -51,14 +51,14 @@ export default function ProjectCard({ project, onDelete, activeProposalCount = 0
   const colorClass = project.status ? (statusColor[project.status] ?? 'bg-gray-100 text-gray-500') : 'bg-gray-100 text-gray-500'
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 flex flex-col gap-2">
+    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 flex flex-col gap-2">
       {/* ヘッダー */}
       <div className="flex justify-between items-start gap-2">
         <div className="flex-1 min-w-0">
-          <h2 className="text-base font-bold leading-snug">{project.project_name}</h2>
+          <h2 className="text-base font-bold leading-snug text-white">{project.project_name}</h2>
           <div className="flex flex-wrap gap-1 mt-0.5">
             {project.client_name && (
-              <span className="text-xs text-gray-500">{project.client_name}</span>
+              <span className="text-xs text-gray-400">{project.client_name}</span>
             )}
             {project.provider_company && (
               <span className="text-xs text-gray-400">/ {project.provider_company}</span>
@@ -99,7 +99,7 @@ export default function ProjectCard({ project, onDelete, activeProposalCount = 0
       )}
 
       {/* 基本情報 */}
-      <div className="text-sm text-gray-600 flex flex-col gap-0.5">
+      <div className="text-sm text-gray-300 flex flex-col gap-0.5">
         {(project.prefecture || project.nearest_station) && (
           <p>場所: {[project.prefecture, project.nearest_station].filter(Boolean).join(' / ')}</p>
         )}
@@ -117,23 +117,23 @@ export default function ProjectCard({ project, onDelete, activeProposalCount = 0
 
       {/* 案件概要（折りたたみ） */}
       {project.description && (
-        <div className="border-t pt-2">
+        <div className="border-t border-gray-700 pt-2">
           <button
             onClick={() => setShowDescription((v) => !v)}
-            className="text-xs text-gray-500 hover:text-gray-700"
+            className="text-xs text-gray-400 hover:text-gray-300"
           >
             {showDescription ? '概要を閉じる ▲' : '概要を見る ▼'}
           </button>
           {showDescription && (
-            <p className="text-xs text-gray-600 mt-1 whitespace-pre-wrap">{project.description}</p>
+            <p className="text-xs text-gray-300 mt-1 whitespace-pre-wrap">{project.description}</p>
           )}
         </div>
       )}
 
       {/* サマリー出力 */}
       {showSummary && (
-        <div className="border-t pt-2">
-          <pre className="text-xs bg-gray-50 rounded p-2 whitespace-pre-wrap break-all text-gray-900">
+        <div className="border-t border-gray-700 pt-2">
+          <pre className="text-xs bg-gray-900 rounded p-2 whitespace-pre-wrap break-all text-gray-300">
             {summary}
           </pre>
           <button onClick={handleCopy} className="mt-1 text-xs text-blue-600 hover:text-blue-800">
@@ -144,7 +144,7 @@ export default function ProjectCard({ project, onDelete, activeProposalCount = 0
 
       <MatchingPanel project={project} />
 
-      <div className="flex justify-between items-center border-t pt-2">
+      <div className="flex justify-between items-center border-t border-gray-700 pt-2">
         <button
           onClick={() => setShowSummary((v) => !v)}
           className="text-sm text-blue-500 hover:text-blue-700"
@@ -154,7 +154,7 @@ export default function ProjectCard({ project, onDelete, activeProposalCount = 0
         <div className="flex gap-3">
           <button
             onClick={() => router.push(`/projects/${project.id}/edit`)}
-            className="text-sm text-gray-500 hover:text-gray-700"
+            className="text-sm text-gray-400 hover:text-gray-300"
           >
             編集
           </button>

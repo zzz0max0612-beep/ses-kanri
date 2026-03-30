@@ -97,7 +97,7 @@ export default function EngineersPage() {
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">要員一覧</h1>
+        <h1 className="text-2xl font-bold text-white">要員一覧</h1>
         <Link
           href="/engineers/new"
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
@@ -107,9 +107,9 @@ export default function EngineersPage() {
       </div>
 
       {loading ? (
-        <p className="text-gray-500">読み込み中...</p>
+        <p className="text-gray-400">読み込み中...</p>
       ) : engineers.length === 0 ? (
-        <p className="text-gray-500">要員が登録されていません。</p>
+        <p className="text-gray-400">要員が登録されていません。</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {engineers.map((engineer) => (
