@@ -90,39 +90,39 @@ export default function MatchingPanel({ project }: Props) {
   }
 
   return (
-    <div className="border-t pt-2">
+    <div className="border-t border-gray-700 pt-2">
       <button
         onClick={handleMatch}
         disabled={loading}
-        className="text-sm text-purple-600 hover:text-purple-800 disabled:opacity-50"
+        className="text-sm text-purple-400 hover:text-purple-300 disabled:opacity-50"
       >
         {loading ? '解析中...' : open ? 'マッチングを閉じる' : 'マッチング確認'}
       </button>
 
-      {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+      {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
 
       {open && matches.length > 0 && (
         <div className="mt-3 flex flex-col gap-3">
           {matches.map((m, i) => (
-            <div key={m.engineer_id} className="border rounded p-3 bg-gray-50">
+            <div key={m.engineer_id} className="border border-gray-700 rounded p-3 bg-gray-900">
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
                   <span className={`text-sm font-bold ${rankColor[i]}`}>{rankLabel[i]}</span>
-                  <span className="font-semibold text-gray-900 text-sm">{m.engineer.name}</span>
+                  <span className="font-semibold text-white text-sm">{m.engineer.name}</span>
                   {m.engineer.sales_status && (
-                    <span className={`text-xs px-1.5 py-0.5 rounded ${salesStatusColor[m.engineer.sales_status] ?? 'bg-gray-100 text-gray-500'}`}>
+                    <span className={`text-xs px-1.5 py-0.5 rounded ${salesStatusColor[m.engineer.sales_status] ?? 'bg-gray-700 text-gray-400'}`}>
                       {m.engineer.sales_status}
                     </span>
                   )}
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-lg font-bold text-purple-700">{m.score}</span>
-                  <span className="text-xs text-gray-400">点</span>
+                  <span className="text-lg font-bold text-purple-400">{m.score}</span>
+                  <span className="text-xs text-gray-500">点</span>
                 </div>
               </div>
 
               {/* スコアバー */}
-              <div className="w-full bg-gray-200 rounded-full h-1.5 mb-2">
+              <div className="w-full bg-gray-700 rounded-full h-1.5 mb-2">
                 <div
                   className="bg-purple-500 h-1.5 rounded-full"
                   style={{ width: `${m.score}%` }}
@@ -133,7 +133,7 @@ export default function MatchingPanel({ project }: Props) {
               {m.matched_skills.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-1.5">
                   {m.matched_skills.map((skill) => (
-                    <span key={skill} className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">
+                    <span key={skill} className="text-xs bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">
                       {skill}
                     </span>
                   ))}
@@ -141,7 +141,7 @@ export default function MatchingPanel({ project }: Props) {
               )}
 
               {/* 補足情報 */}
-              <div className="flex flex-wrap gap-2 text-xs text-gray-500 mb-1.5">
+              <div className="flex flex-wrap gap-2 text-xs text-gray-400 mb-1.5">
                 {m.engineer.experience_years != null && (
                   <span>経験 {m.engineer.experience_years}年</span>
                 )}
@@ -154,7 +154,7 @@ export default function MatchingPanel({ project }: Props) {
               </div>
 
               {/* 理由 */}
-              <p className="text-xs text-gray-600 leading-relaxed">{m.reason}</p>
+              <p className="text-xs text-gray-400 leading-relaxed">{m.reason}</p>
             </div>
           ))}
         </div>
