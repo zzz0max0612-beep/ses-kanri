@@ -10,6 +10,7 @@ type Props = {
   project: Project
   onDelete: (id: string) => void
   activeProposalCount?: number
+  isDemo?: boolean
 }
 
 const workStyleLabel: Record<string, string> = {
@@ -19,14 +20,14 @@ const workStyleLabel: Record<string, string> = {
 }
 
 const statusColor: Record<string, string> = {
-  '営業中': 'bg-green-100 text-green-700',
-  '面談調整中': 'bg-yellow-100 text-yellow-700',
-  '面談中': 'bg-blue-100 text-blue-700',
-  '成約': 'bg-purple-100 text-purple-700',
-  '終了': 'bg-gray-100 text-gray-500',
+  '営業中': 'bg-green-900/40 text-green-400',
+  '面談調整中': 'bg-yellow-900/40 text-yellow-400',
+  '面談中': 'bg-blue-900/40 text-blue-400',
+  '成約': 'bg-purple-900/40 text-purple-400',
+  '終了': 'bg-gray-700 text-gray-400',
 }
 
-export default function ProjectCard({ project, onDelete, activeProposalCount = 0 }: Props) {
+export default function ProjectCard({ project, onDelete, activeProposalCount = 0, isDemo = false }: Props) {
   const router = useRouter()
   const [showSummary, setShowSummary] = useState(false)
   const [showDescription, setShowDescription] = useState(false)
@@ -48,7 +49,7 @@ export default function ProjectCard({ project, onDelete, activeProposalCount = 0
     ? `〜${project.budget_max.toLocaleString()}円`
     : null
 
-  const colorClass = project.status ? (statusColor[project.status] ?? 'bg-gray-100 text-gray-500') : 'bg-gray-100 text-gray-500'
+  const colorClass = project.status ? (statusColor[project.status] ?? 'bg-gray-700 text-gray-400') : 'bg-gray-700 text-gray-400'
 
   return (
     <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 flex flex-col gap-2">
@@ -75,12 +76,12 @@ export default function ProjectCard({ project, onDelete, activeProposalCount = 0
             </span>
           )}
           {project.work_style && (
-            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
+            <span className="text-xs bg-blue-900/40 text-blue-400 px-2 py-0.5 rounded">
               {workStyleLabel[project.work_style] ?? project.work_style}
             </span>
           )}
           {activeProposalCount > 0 && (
-            <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded">
+            <span className="text-xs bg-orange-900/40 text-orange-400 px-2 py-0.5 rounded">
               提案 {activeProposalCount}名
             </span>
           )}
@@ -91,7 +92,7 @@ export default function ProjectCard({ project, onDelete, activeProposalCount = 0
       {project.required_skills.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {project.required_skills.map((skill) => (
-            <span key={skill} className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
+            <span key={skill} className="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded">
               {skill}
             </span>
           ))}
@@ -142,7 +143,7 @@ export default function ProjectCard({ project, onDelete, activeProposalCount = 0
         </div>
       )}
 
-      <MatchingPanel project={project} />
+      {!isDemo && <MatchingPanel project={project} />}
 
       <div className="flex justify-between items-center border-t border-gray-700 pt-2">
         <button
@@ -151,20 +152,22 @@ export default function ProjectCard({ project, onDelete, activeProposalCount = 0
         >
           {showSummary ? 'サマリーを閉じる' : 'サマリーを展開'}
         </button>
-        <div className="flex gap-3">
-          <button
-            onClick={() => router.push(`/projects/${project.id}/edit`)}
-            className="text-sm text-gray-400 hover:text-gray-300"
-          >
-            編集
-          </button>
-          <button
-            onClick={() => onDelete(project.id)}
-            className="text-sm text-red-500 hover:text-red-700"
-          >
-            削除
-          </button>
-        </div>
+        {!isDemo && (
+          <div className="flex gap-3">
+            <button
+              onClick={() => router.push(`/projects/${project.id}/edit`)}
+              className="text-sm text-gray-400 hover:text-gray-300"
+            >
+              編集
+            </button>
+            <button
+              onClick={() => onDelete(project.id)}
+              className="text-sm text-red-500 hover:text-red-700"
+            >
+              削除
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

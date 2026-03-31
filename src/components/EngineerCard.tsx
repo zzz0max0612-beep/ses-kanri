@@ -15,6 +15,7 @@ type Props = {
   skillSheets: SkillSheet[]
   onDelete: (id: string) => void
   activeProposalCount?: number
+  isDemo?: boolean
 }
 
 const workStyleLabel: Record<string, string> = {
@@ -24,14 +25,14 @@ const workStyleLabel: Record<string, string> = {
 }
 
 const salesStatusColor: Record<string, string> = {
-  '営業中': 'bg-green-100 text-green-700',
-  '並行営業中': 'bg-yellow-100 text-yellow-700',
-  '稼働中': 'bg-blue-100 text-blue-700',
-  '調整中': 'bg-orange-100 text-orange-700',
-  '停止中': 'bg-gray-100 text-gray-500',
+  '営業中': 'bg-green-900/40 text-green-400',
+  '並行営業中': 'bg-yellow-900/40 text-yellow-400',
+  '稼働中': 'bg-blue-900/40 text-blue-400',
+  '調整中': 'bg-orange-900/40 text-orange-400',
+  '停止中': 'bg-gray-700 text-gray-400',
 }
 
-export default function EngineerCard({ engineer, skillSheets, onDelete, activeProposalCount = 0 }: Props) {
+export default function EngineerCard({ engineer, skillSheets, onDelete, activeProposalCount = 0, isDemo = false }: Props) {
   const router = useRouter()
   const [showSummary, setShowSummary] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -62,8 +63,8 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
     : null
 
   const statusColor = engineer.sales_status
-    ? (salesStatusColor[engineer.sales_status] ?? 'bg-gray-100 text-gray-500')
-    : 'bg-gray-100 text-gray-500'
+    ? (salesStatusColor[engineer.sales_status] ?? 'bg-gray-700 text-gray-400')
+    : 'bg-gray-700 text-gray-400'
 
   return (
     <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 flex flex-col gap-2">
@@ -86,7 +87,7 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
           {engineer.created_by_name && (
             <span className="text-xs text-gray-400">{engineer.created_by_name}</span>
           )}
-          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
+          <span className="text-xs bg-blue-900/40 text-blue-400 px-2 py-0.5 rounded">
             {workStyleLabel[engineer.work_style] ?? engineer.work_style}
           </span>
           {engineer.sales_status && (
@@ -95,7 +96,7 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
             </span>
           )}
           {activeProposalCount > 0 && (
-            <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded">
+            <span className="text-xs bg-orange-900/40 text-orange-400 px-2 py-0.5 rounded">
               提案中 {activeProposalCount}件
             </span>
           )}
@@ -106,7 +107,7 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
       {engineer.skills.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {engineer.skills.map((skill) => (
-            <span key={skill} className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
+            <span key={skill} className="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded">
               {skill}
             </span>
           ))}
@@ -141,7 +142,7 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
       )}
 
       {/* スキルシート */}
-      {skillSheets.length > 0 && (
+      {!isDemo && skillSheets.length > 0 && (
         <div className="border-t border-gray-700 pt-2">
           <p className="text-xs font-medium text-gray-400 mb-1">スキルシート</p>
           <div className="flex flex-col gap-1">
@@ -177,20 +178,22 @@ export default function EngineerCard({ engineer, skillSheets, onDelete, activePr
         >
           {showSummary ? 'サマリーを閉じる' : 'サマリーを展開'}
         </button>
-        <div className="flex gap-3">
-          <button
-            onClick={() => router.push(`/engineers/${engineer.id}/edit`)}
-            className="text-sm text-gray-400 hover:text-gray-300"
-          >
-            編集
-          </button>
-          <button
-            onClick={() => onDelete(engineer.id)}
-            className="text-sm text-red-500 hover:text-red-700"
-          >
-            削除
-          </button>
-        </div>
+        {!isDemo && (
+          <div className="flex gap-3">
+            <button
+              onClick={() => router.push(`/engineers/${engineer.id}/edit`)}
+              className="text-sm text-gray-400 hover:text-gray-300"
+            >
+              編集
+            </button>
+            <button
+              onClick={() => onDelete(engineer.id)}
+              className="text-sm text-red-500 hover:text-red-700"
+            >
+              削除
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
