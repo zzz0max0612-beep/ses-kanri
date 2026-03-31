@@ -1,3 +1,5 @@
+'use client'
+
 import { mockProjects } from '@/lib/mock-data'
 import ProjectCard from '@/components/ProjectCard'
 
